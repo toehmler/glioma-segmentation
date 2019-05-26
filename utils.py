@@ -34,7 +34,7 @@ def norm_scans(scans):
     normed_scans = np.zeros((146, 192, 152, 5)).astype(np.float32)
     normed_scans[:,:,:,4] = scans[4,:,:,:]
     for mod_idx in range(4):
-        for slice_idx in range(155):
+        for slice_idx in range(146):
             normed_slice = norm_slice(scans[mod_idx,slice_idx,:,:])
             normed_scans[slice_idx,:,:,mod_idx] = normed_slice
     return normed_scans
