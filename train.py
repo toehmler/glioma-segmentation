@@ -5,6 +5,8 @@ import utils
 import numpy as np
 import sys
 from keras.models import load_model
+from sklearn.utils import class_weights
+from sklearn.utils.class_weights import compute_class_weight
 
 '''
 with open('config.json') as config_file:
@@ -51,9 +53,15 @@ if __name__ == '__main__':
         gt = patient_slice[:,:,4]
         # exclude slices without a tumor present
         if len(np.argwhere(gt == 0)) != (240 * 240):
-            x, y, class_weights = utils.training_patches(patient_slice)
+            x, labels = utils.training_patches(patient_slice)
+            cw = compute_class_weight('balanced',np.unique(label),label)
+            # reshape labels to (1,1,5) with one hot encoding
+            y = np.zeros((labels.shape[0],1,1,5))
+            for i in range(labels.shape[0]):
+                y[i,:,:,labels[i]] = 1
+
             print('Slice no {}'.format(slice_no))
-            model.fit(x,y,epochs=5,batch_size=128,class_weight=class_weights)
+            model.fit(x,y,epochs=5,batch_size=128,class_weight=cw)
             model.save('outputs/models/{}_train.h5'.format(model_name))
             model.save_weights('{}_train_weights.h5'.format(model_name))
 

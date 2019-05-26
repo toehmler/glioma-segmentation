@@ -4,6 +4,7 @@ import numpy as np
 import json
 import os
 from sklearn.utils import class_weight as cw
+from sklearn.utils.class_weight import compute_class_weight
 
 # TODO add n4 bias correction from og repo
 
@@ -57,15 +58,11 @@ def training_patches(slice):
     for x, y in grid:
         bounds = find_bounds([x, y], size)
         patch = slice[bounds[0]:bounds[1],bounds[2]:bounds[3],:4]
-        truth = slice[x,y,4]
+        label = slice[x,y,4]
         if patch.shape == (size,size,4):
             patches.append(patch)
-            # reshape labels to be (1,1,5) with one hot encoding
-            label = np.zeros((1,1,5))
-            label[0,0,int(truth)] = 1
             labels.append(label)
-    class_weights = cw.compute_class_weight('balanced', np.unique(truth), truth)                
-    return np.array(patches), np.array(labels), class_weights
+    return np.array(patches), np.array(labels)
 
 def rename_pat_dirs(root):
     os.chdir(root)
