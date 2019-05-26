@@ -37,7 +37,7 @@ def tri_path(input_shape):
     out = Activation('softmax')(out)
 
     model = Model(inputs=X_input, outputs=out)
-    model.compile(optimizer='adam', loss='categorical_crossentropy')
+    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
     return model
 
 def two_path(input_shape):
@@ -74,16 +74,10 @@ def two_path(input_shape):
     return model
 
 if __name__ == "__main__":
-    train_model = tri_path((33,33,4))
-    with open('outputs/models/tri_path_train.json', 'w') as train_file:
-        train_json = train_model.to_json()
-        train_file.write(train_json)
-    
-    test_model = tri_path((240,240,4))
-    with open('outputs/models/tri_path_test.json', 'w') as test_file:
-        test_json = test_model.to_json()
-        test_file.write(test_json)
 
+    name = input('Model name: ')
+    train_model = tri_path((33,33,4))
+    train_model.save('outputs/models/{}_train.h5'.format(name))
 
 
 
