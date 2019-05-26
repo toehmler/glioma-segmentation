@@ -5,8 +5,7 @@ import utils
 import numpy as np
 import sys
 from keras.models import load_model
-from sklearn.utils import class_weights
-from sklearn.utils.class_weights import compute_class_weight
+from sklearn.utils.class_weight import compute_class_weight
 
 '''
 with open('config.json') as config_file:
