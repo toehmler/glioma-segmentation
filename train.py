@@ -51,7 +51,8 @@ if __name__ == '__main__':
     for slice_no, patient_slice in enumerate(patient_scans):
         gt = patient_slice[:,:,4]
         # exclude slices without any tumor present
-        if len(np.argwhere(gt == 0)) == (240 * 240):
+        if gt.all() == 0:
+        #if len(np.argwhere(gt == 0)) == (240 * 240):
             continue
         x, labels = utils.training_patches(patient_slice)
         class_weights = compute_class_weight('balanced',np.unique(labels),labels)

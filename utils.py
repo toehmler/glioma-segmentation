@@ -15,14 +15,23 @@ def load_scans(path):
     t2 = glob(path + '/*T2.*/*.mha')
     gt = glob(path + '/*OT*/*.mha')
     paths = [flair[0], t1[0], t1c[0], t2[0], gt[0]]
+    scans = [stik.GetArrayFromImage(stik.ReadImage(paths[i])) 
+            for mod in range(len(paths))]
+    scans = np.array(scans)
+    # remove extra bg by cropping each volume to size of (146,192,152) 
+    return scans[:, 1:147, 29:221, 42:194]
+
+
+    '''
     scans = []
     for i in range(5):
         img = stik.ReadImage(paths[i])
         scans.append(stik.GetArrayFromImage(img))
-    return np.array(scans)
+    '''    
+#    return np.array(scans)
 
 def norm_scans(scans):
-    normed_scans = np.zeros((155, 240, 240, 5)).astype(np.float32)
+    normed_scans = np.zeros((146, 192, 152, 5)).astype(np.float32)
     normed_scans[:,:,:,4] = scans[4,:,:,:]
     for mod_idx in range(4):
         for slice_idx in range(155):
@@ -53,7 +62,7 @@ def training_patches(slice):
     size = 33
     patches = []
     labels = []
-    grid = [(h, w) for h in range(240) for w in range(240)]
+    grid = [(h, w) for h in range(192) for w in range(152)]
     for x, y in grid:
         bounds = find_bounds([x, y], size)
         patch = slice[bounds[0]:bounds[1],bounds[2]:bounds[3],:4]
@@ -74,7 +83,10 @@ if __name__ == '__main__':
     with open('config.json') as config_file:
         config = json.load(config_file)
     root = config['root']
-    rename_pat_dirs(root)
+    #rename_pat_dirs(root)
+    patient = glob(root + '/*pat0*')
+    scans = load_scans(patient[0])
+
 
     
 
