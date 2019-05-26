@@ -60,7 +60,7 @@ def training_patches(slice):
         label = slice[x,y,4]
         if patch.shape == (size,size,4):
             patches.append(patch)
-            labels.append(label)
+            labels.append(int(label))
     return np.array(patches), np.array(labels)
 
 def rename_pat_dirs(root):
