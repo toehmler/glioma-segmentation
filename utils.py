@@ -15,11 +15,11 @@ def load_scans(path):
     t2 = glob(path + '/*T2.*/*.mha')
     gt = glob(path + '/*OT*/*.mha')
     paths = [flair[0], t1[0], t1c[0], t2[0], gt[0]]
-    scans = [stik.GetArrayFromImage(stik.ReadImage(paths[i])) 
+    scans = [stik.GetArrayFromImage(stik.ReadImage(paths[mod])) 
             for mod in range(len(paths))]
     scans = np.array(scans)
     # remove extra bg by cropping each volume to size of (146,192,152) 
-    return scans[:, 1:147, 29:221, 42:194]
+    return scans[:,1:147, 29:221, 42:194]
 
 
     '''
