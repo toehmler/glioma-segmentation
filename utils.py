@@ -3,7 +3,6 @@ import SimpleITK as stik
 import numpy as np
 import json
 import os
-from sklearn.utils import class_weight as cw
 from sklearn.utils.class_weight import compute_class_weight
 
 # TODO add n4 bias correction from og repo
