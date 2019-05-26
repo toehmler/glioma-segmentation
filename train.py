@@ -54,7 +54,7 @@ if __name__ == '__main__':
             x, y, class_weights = utils.training_patches(patient_slice)
             print('Slice no {}'.format(slice_no))
             model.fit(x,y,epochs=5,batch_size=128,class_weight=class_weights)
-            model.save('outputs/models/{}.h5'.format(model_name))
+            model.save('outputs/models/{}_train.h5'.format(model_name))
 
 
 
