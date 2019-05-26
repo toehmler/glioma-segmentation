@@ -54,7 +54,7 @@ if __name__ == '__main__':
         if len(np.argwhere(gt == 0)) == (240 * 240):
             continue
         x, labels = utils.training_patches(patient_slice)
-        class_weights = compute_class_weight('balanced',np.unique(label),label)
+        class_weights = compute_class_weight('balanced',np.unique(labels),labels)
         # reshape labels to (1,1,5) with one hot encoding
         y = np.zeros((labels.shape[0],1,1,5))
         for i in range(labels.shape[0]):
