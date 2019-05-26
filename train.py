@@ -37,7 +37,7 @@ if __name__ == '__main__':
         model_name = input('Model name: ')
         patient_no = input('Patient no: ')
 
-    model = load_model('outputs/{}_train.h5'.format(model_name))
+    model = load_model('outputs/models/{}_train.h5'.format(model_name))
 
     with open('config.json') as config_file:
         config = json.load(config_file)
