@@ -37,7 +37,7 @@ if __name__ == '__main__':
         model_name = input('Model name: ')
         patient_no = input('Patient no: ')
 
-    model = load_model('outputs/{}.h5'.format(model_name))
+    model = load_model('outputs/{}_train.h5'.format(model_name))
 
     with open('config.json') as config_file:
         config = json.load(config_file)
@@ -55,6 +55,8 @@ if __name__ == '__main__':
             print('Slice no {}'.format(slice_no))
             model.fit(x,y,epochs=5,batch_size=128,class_weight=class_weights)
             model.save('outputs/models/{}_train.h5'.format(model_name))
+            model.save_weights('{}_train_weights.h5'.format(model_name))
+
 
 
 
