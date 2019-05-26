@@ -61,7 +61,7 @@ if __name__ == '__main__':
             y[i,:,:,labels[i]] = 1
 
         print('Slice no {}'.format(slice_no))
-        model.fit(x,y,epochs=5,batch_size=128,class_weight=cw)
+        model.fit(x,y,epochs=5,batch_size=128,class_weight=class_weights)
         model.save('outputs/models/{}_train.h5'.format(model_name))
         model.save_weights('{}_train_weights.h5'.format(model_name))
 
