@@ -41,8 +41,8 @@ pred = prediction[0]
 
 y = test_label[0,15:223,15:223]
 
-print(pred.shape)
-print(y.shape)
+truth = y.reshape(43264,)
+guess = pred.reshape(43264,)
 
 print(classification_report(y, pred, labels=[0,1,2,3,4]))
 
