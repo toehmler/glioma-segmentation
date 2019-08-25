@@ -37,15 +37,14 @@ test_label = patient_scans[slice_no:slice_no+1,:,:,4]
 prediction = model.predict(test_slice, verbose=1)
 preciction = np.argmax(prediction, axis=-1)
 pred = prediction[0]
-print(prediction.shape)
-print(pred.shape)
 
 
 y = test_label[0,15:223,15:223]
-truth = y.reshape(43264,)
-guess = pred.reshape(43264,)
 
-print(classification_report(truth, guess, labels=[0,1,2,3,4]))
+print(pred.shape)
+print(y.shape)
+
+#print(classification_report(truth, guess, labels=[0,1,2,3,4]))
 
 
 
