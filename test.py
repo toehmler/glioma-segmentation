@@ -43,7 +43,7 @@ print(pred.shape)
 
 y = test_label[0,15:223,15:223]
 truth = y.reshape(43264,)
-print(classification_report(truth, prediction, labels=[0,1,2,3,4]))
+print(classification_report(truth, pred, labels=[0,1,2,3,4]))
 
 
 
