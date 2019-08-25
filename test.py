@@ -31,11 +31,12 @@ patient_path = glob(root + '/*pat{}*'.format(patient_no))
 patient_scans = utils.load_test_scans(patient_path[0])
 patient_scans = utils.norm_test_scans(patient_scans)
 
-test_slice = patient_scans[slice_no:slice_no,:,:,:4]
-test_label = patient_scans[slice_no:slice_no,:,:,4]
+test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
+test_label = patient_scans[slice_no:slice_no+1,:,:,4]
 
 
-prediction = model.predict_classes(test_slice)
+prediction = model.predict(test_slice, verbose=1)
+preciction = np.argmax(prediction, axis=-1)
 print(prediction.shape)
 
 y = test_label[15:223,15:223]
