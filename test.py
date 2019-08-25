@@ -14,6 +14,7 @@ json_file.close()
 
 model = model_from_json(loaded_model_json)
 model.load_weights("outputs/models/tri_path_02_train.h5")
+print(model.summary())
 
 with open('config.json') as config_file:
     config = json.load(config_file)
@@ -30,8 +31,12 @@ patient_path = glob(root + '/*pat{}*'.format(patient_no))
 patient_scans = utils.load_test_scans(patient_path[0])
 patient_scans = utils.norm_test_scans(patient_scans)
 
-test_slice = patient_scans[slice_no,:,:,:4]
-test_label = patient_scans[slice_no,:,:,4]
+test_slice = patient_scans[slice_no:slice_no,:,:,:4]
+test_label = patient_scans[slice_no:slice_no,:,:,4]
+print(test_slice.shape)
+
+
+'''
 
 prediction = model.predict(test_slice, verbose=1)
 prediction = np.argmax(prediction, axis=-1)
@@ -40,6 +45,7 @@ y = test_label[15:223,15:223]
 truth = y.reshape(43264,)
 print(classification_report(truth, prediction, labels=[0,1,2,3,4]))
 
+'''
 
 
 
