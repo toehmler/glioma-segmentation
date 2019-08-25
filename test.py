@@ -1,5 +1,7 @@
 from keras.models import load_model
 from keras.models import model_from_json
+from sklearn.metrics import classification_report
+import numpy as np
 import utils
 import json
 from glob import glob
@@ -31,18 +33,13 @@ patient_scans = utils.norm_test_scans(patient_scans)
 test_slice = patient_scans[slice_no,:,:,:4]
 test_label = patient_scans[slice_no,:,:,4]
 
-prediction = model.predict_classes(test_slice)
+prediction = model.predict(test_slice, verbose=1)
+prediction = np.argmax(prediction, axis=-1)
 
 y = test_label[15:223,15:223]
 truth = y.reshape(43264,)
 print(classification_report(truth, prediction, labels=[0,1,2,3,4]))
 
-
-
-
-
-
-print(test_slice.shape)
 
 
 
