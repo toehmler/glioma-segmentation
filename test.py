@@ -44,7 +44,7 @@ y = test_label[0,15:223,15:223]
 print(pred.shape)
 print(y.shape)
 
-#print(classification_report(truth, guess, labels=[0,1,2,3,4]))
+print(classification_report(truth, guess, labels=[0,1,2,3,4]))
 
 
 
