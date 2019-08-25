@@ -33,10 +33,7 @@ patient_scans = utils.norm_test_scans(patient_scans)
 
 test_slice = patient_scans[slice_no:slice_no,:,:,:4]
 test_label = patient_scans[slice_no:slice_no,:,:,4]
-print(test_slice.shape)
 
-
-'''
 
 prediction = model.predict(test_slice, verbose=1)
 prediction = np.argmax(prediction, axis=-1)
@@ -44,8 +41,6 @@ prediction = np.argmax(prediction, axis=-1)
 y = test_label[15:223,15:223]
 truth = y.reshape(43264,)
 print(classification_report(truth, prediction, labels=[0,1,2,3,4]))
-
-'''
 
 
 
