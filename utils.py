@@ -10,8 +10,8 @@ from sklearn.utils.class_weight import compute_class_weight
 
 def load_scans(path):
     flair = glob(path + '/*Flair*/*.mha')
-    t1 = glob(path + '/*T1.*/*_n4.mha')
-    t1c = glob(path + '/*T1c.*/*_n4.mha')
+    t1 = glob(path + '/*T1.*/*.mha')
+    t1c = glob(path + '/*T1c.*/*.mha')
     t2 = glob(path + '/*T2.*/*.mha')
     gt = glob(path + '/*OT*/*.mha')
     paths = [flair[0], t1[0], t1c[0], t2[0], gt[0]]
@@ -21,6 +21,21 @@ def load_scans(path):
     # remove extra bg by cropping each volume to size of (146,192,152) 
     return scans[:,1:147, 29:221, 42:194]
 
+def load_test_scans(path):
+    flair = glob(path + '/*Flair*/*.mha')
+    t1 = glob(path + '/*T1.*/*.mha')
+    t1c = glob(path + '/*T1c.*/*.mha')
+    t2 = glob(path + '/*T2.*/*.mha')
+    gt = glob(path + '/*OT*/*.mha')
+    paths = [flair[0], t1[0], t1c[0], t2[0], gt[0]]
+    scans = [stik.GetArrayFromImage(stik.ReadImage(paths[mod])) 
+            for mod in range(len(paths))]
+    scans = np.array(scans)
+    return scans
+
+
+
+
 
     '''
     scans = []
@@ -29,6 +44,15 @@ def load_scans(path):
         scans.append(stik.GetArrayFromImage(img))
     '''    
 #    return np.array(scans)
+
+def norm_test_scans(scans):
+    normed_test_scans = np.zeros((155,240,240,5)).astype(np.float32)
+    normed_test_scans[:,:,:,4] = scans[4,:,:,:]
+    for mod_idx in range(4):
+        for slice_idx in range(155):
+            normed_slice = norm_slice(scans[mod_idx,slice_idx,:,:])
+            normed_test_scans[slice_idx,:,:,mod_idx] = normed_slice
+    return normed_test_scans
 
 def norm_scans(scans):
     normed_scans = np.zeros((146, 192, 152, 5)).astype(np.float32)
