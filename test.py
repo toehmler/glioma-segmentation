@@ -35,9 +35,8 @@ test_slice = patient_scans[slice_no:slice_no,:,:,:4]
 test_label = patient_scans[slice_no:slice_no,:,:,4]
 
 
-prediction = model.predict(test_slice, verbose=1)
-#prediction = np.argmax(prediction, axis=-1)
-print(prediction)
+prediction = model.predict_classes(test_slice)
+print(prediction.shape)
 
 y = test_label[15:223,15:223]
 truth = y.reshape(43264,)
