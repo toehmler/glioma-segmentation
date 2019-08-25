@@ -14,7 +14,7 @@ json_file.close()
 
 model = model_from_json(loaded_model_json)
 model.load_weights("outputs/models/tri_path_02_train.h5")
-print(model.summary())
+#print(model.summary())
 
 with open('config.json') as config_file:
     config = json.load(config_file)
