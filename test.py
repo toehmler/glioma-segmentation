@@ -35,7 +35,7 @@ test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
 test_label = patient_scans[slice_no:slice_no+1,:,:,4]
 
 prediction = model.predict(test_slice, verbose=1)
-preciction = np.argmax(prediction, axis=-1)
+prediction = np.argmax(prediction, axis=-1)
 pred = prediction[0]
 
 
