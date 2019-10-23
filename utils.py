@@ -10,8 +10,8 @@ from sklearn.utils.class_weight import compute_class_weight
 
 def load_scans(path):
     flair = glob(path + '/*Flair*/*.mha')
-    t1 = glob(path + '/*T1.*/*.mha')
-    t1c = glob(path + '/*T1c.*/*.mha')
+    t1 = glob(path + '/*T1.*/*_n4.mha')
+    t1c = glob(path + '/*T1c.*/*_n4.mha')
     t2 = glob(path + '/*T2.*/*.mha')
     gt = glob(path + '/*OT*/*.mha')
     paths = [flair[0], t1[0], t1c[0], t2[0], gt[0]]

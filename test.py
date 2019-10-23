@@ -1,5 +1,8 @@
 from keras.models import load_model
 import matplotlib.pyplot as plt
+import imageio
+from skimage import io
+import skimage
 
 from keras.models import model_from_json
 from sklearn.metrics import classification_report
@@ -15,15 +18,15 @@ loaded_model_json = json_file.read()
 json_file.close()
 
 model = model_from_json(loaded_model_json)
-model.load_weights("outputs/models/tri_path_03_train.h5")
+model.load_weights("outputs/models/tri_path_02_train.h5")
 #print(model.summary())
 
 with open('config.json') as config_file:
     config = json.load(config_file)
 root = config['root']
 
-patient_no = 196 
-slice_no = 70 
+patient_no = 191 
+slice_no = 75 
 
 
 with open('config.json') as config_file:
@@ -37,12 +40,18 @@ test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
 test_label = patient_scans[slice_no:slice_no+1,:,:,4]
 scan = test_slice[0,:,:,1]
 tmp_label = test_label[0]
+print(test_slice.shape)
 
 
-prediction = model.predict(test_slice, verbose=1)
+# added batch_size of 256 (was none before)
+prediction = model.predict(test_slice, batch_size=256, verbose=1)
+prediction = np.around(prediction)
+print(prediction.shape)
 prediction = np.argmax(prediction, axis=-1)
 print(prediction.shape)
 pred = prediction[0]
+print(pred.shape)
+print(pred)
 tmp_pred = pred.reshape(208, 208)
 tmp_pred = np.pad(tmp_pred, (16, 16), mode='edge')
 
@@ -57,8 +66,8 @@ plt.imshow(tmp_label,cmap='gray')
 plt.subplot(133)
 plt.title('Prediction')
 plt.imshow(tmp_pred,cmap='gray')
-plt.show()
-plt.savefig('testing.png', bbox_inches='tight')
+plt.savefig('outputs/test_prediction.png', bbox_inches='tight')
+#plt.show()
 
 
 
