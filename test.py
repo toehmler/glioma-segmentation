@@ -20,8 +20,8 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 root = config['root']
 
-patient_no = 205
-slice_no = 70
+patient_no = 205 
+slice_no = 70  
 
 
 with open('config.json') as config_file:
