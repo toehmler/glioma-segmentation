@@ -58,14 +58,7 @@ if __name__ == '__main__':
         if len(np.argwhere(gt==0)) == 192*152:
             continue
         x, labels = utils.training_patches(patient_slice)
-        unique_labels = np.unique(labels)
-        cw_dict = {}
-        for i in unique_labels:
-            if i == 0:
-                cw_dict[i] = 1
-            else:
-                cw_dict[i] = 100
-        class_weights = compute_class_weight(cw_dict,np.unique(labels),labels)
+        class_weights = compute_class_weight('balanced',np.unique(labels),labels)
         # reshape labels to (1,1,5) with one hot encoding
         y = np.zeros((labels.shape[0],1,1,5))
         for i in range(labels.shape[0]):
@@ -73,7 +66,7 @@ if __name__ == '__main__':
 
         print('Slice no {}'.format(slice_no))
         # changed batch size to 256 from 1024 
-        model.fit(x,y,epochs=2,batch_size=256,class_weight=class_weights)
+        model.fit(x,y,epochs=2,batch_size=1024,class_weight=class_weights)
         model.save('outputs/models/{}_train.h5'.format(model_name))
         model.save_weights('{}_train_weights.h5'.format(model_name))
 
