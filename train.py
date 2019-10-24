@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
         print('Slice no {}'.format(slice_no))
         # changed batch size to 256 from 1024 
-        model.fit(x,y,epochs=2,batch_size=1024)
+        model.fit(x,y,epochs=2,batch_size=512)
         model.save('outputs/models/{}_train.h5'.format(model_name))
         model.save_weights('{}_train_weights.h5'.format(model_name))
 
