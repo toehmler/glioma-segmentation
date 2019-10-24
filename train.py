@@ -54,7 +54,7 @@ if __name__ == '__main__':
         #if gt.all() == 0:
         #if len(np.argwhere(gt == 0)) == (240 * 240):
         # check if more than 90% of slice is 0
-        if len(np.argwhere(gt==0)) >= 26265:
+        if len(np.argwhere(gt==0)) >= 27725:
             continue
         x, labels = utils.training_patches(patient_slice)
         class_weights = compute_class_weight('balanced',np.unique(labels),labels)
