@@ -53,11 +53,11 @@ if __name__ == '__main__':
         # exclude slices without any tumor present
         #if gt.all() == 0:
         #if len(np.argwhere(gt == 0)) == (240 * 240):
-        # check if more than 90% of slice is 0
+        # check if more than 95% of slice is 0
         if len(np.argwhere(gt==0)) >= 27725:
             continue
         x, labels = utils.training_patches(patient_slice)
-        class_weights = compute_class_weight('balanced',np.unique(labels),labels)
+#        class_weights = compute_class_weight('balanced',np.unique(labels),labels)
         # reshape labels to (1,1,5) with one hot encoding
         y = np.zeros((labels.shape[0],1,1,5))
         for i in range(labels.shape[0]):
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
         print('Slice no {}'.format(slice_no))
         # changed batch size to 256 from 1024 
-        model.fit(x,y,epochs=2,batch_size=256,class_weight=class_weights)
+        model.fit(x,y,epochs=2,batch_size=1024)
         model.save('outputs/models/{}_train.h5'.format(model_name))
         model.save_weights('{}_train_weights.h5'.format(model_name))
 
