@@ -39,7 +39,8 @@ def tri_path(input_shape):
     out = Activation('softmax')(out)
 
     model = Model(inputs=X_input, outputs=out)
-    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=[f1_score])
+    sgd = SGD(lr=0.08, momentum=0.9, decay=5e-6, nesterov=False)
+    model.compile(optimizer='sgd',loss='categorical_crossentropy',metrics=[f1_score])
     return model
 
 def two_path(input_shape):
