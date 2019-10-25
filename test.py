@@ -29,11 +29,7 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 root = config['root']
 
-<<<<<<< HEAD
 patient_no = 204 
-=======
-patient_no = 210 
->>>>>>> ba1aa069eb96587f68acd053ba5a780d12f749ce
 slice_no = 70
 
 
