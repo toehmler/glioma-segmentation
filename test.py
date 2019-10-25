@@ -18,11 +18,7 @@ loaded_model_json = json_file.read()
 json_file.close()
 
 model = model_from_json(loaded_model_json)
-<<<<<<< HEAD
 model.load_weights("outputs/models/tri_path_15_train.h5")
-=======
-model.load_weights("outputs/models/tri_path_16_train.h5")
->>>>>>> ba1aa069eb96587f68acd053ba5a780d12f749ce
 #print(model.summary())
 
 with open('config.json') as config_file:
