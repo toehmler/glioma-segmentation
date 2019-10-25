@@ -75,7 +75,7 @@ if __name__ == '__main__':
         #if len(np.argwhere(gt == 0)) == (240 * 240):
         # check if more than 97% of slice is 0
         #check if more than 96% of slice is 0
-        if len(np.argwhere(gt==0)) == 192*152:
+        if len(np.argwhere(gt==0)) == (192*152*0.96):
             continue
         x, labels = utils.training_patches(patient_slice)
         class_weights = compute_class_weight('balanced',np.unique(labels),labels)
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
         print('Slice no {}'.format(slice_no))
         # changed batch size to 256 from 1024 
-        model.fit(x,y,epochs=2,batch_size=1024,class_weight=class_weights, validation_split=0.1)
+        model.fit(x,y,epochs=2,batch_size=1024,class_weight=class_weights, validation_split=0.2)
         model.save('outputs/models/{}_train.h5'.format(model_name))
         model.save_weights('{}_train_weights.h5'.format(model_name))
 
