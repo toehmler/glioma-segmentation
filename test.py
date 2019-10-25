@@ -18,14 +18,18 @@ loaded_model_json = json_file.read()
 json_file.close()
 
 model = model_from_json(loaded_model_json)
-model.load_weights("outputs/models/tri_path_11_train.h5")
+model.load_weights("outputs/models/tri_path_12_train.h5")
 #print(model.summary())
 
 with open('config.json') as config_file:
     config = json.load(config_file)
 root = config['root']
 
+<<<<<<< HEAD
 patient_no = 204 
+=======
+patient_no = 205 
+>>>>>>> c057f4f0d7c19c37b69b7637303570d4e59e8810
 slice_no = 70
 
 
