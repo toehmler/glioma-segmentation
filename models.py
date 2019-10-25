@@ -12,35 +12,34 @@ def tri_path(input_shape):
 
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    local = BatchNormalization(momentum=0.9)(local)
+    local = BatchNormalization()(local)
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization(momentum=0.9)(local)
+    local = BatchNormalization()(local)
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization(momentum=0.9)(local)
+    local = BatchNormalization()(local)
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization(momentum=0.9)(local)
+    local = BatchNormalization()(local)
 
     inter = Conv2D(64, (7,7),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    inter = BatchNormalization(momentum=0.9)(inter)
+    inter = BatchNormalization()(inter)
     inter = Conv2D(64, (7,7),
             strides=(1,1), padding='valid', activation='relu')(inter)
-    inter = BatchNormalization(momentum=0.9)(inter)
+    inter = BatchNormalization()(inter)
 
     uni = Conv2D(160, (13,13),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    uni = BatchNormalization(momentum=0.9)(uni)
+    uni = BatchNormalization()(uni)
 
     out = Concatenate()([local, inter, uni])
     out = Conv2D(5,(21,21),strides=(1,1),padding='valid')(out)
     out = Activation('softmax')(out)
 
     model = Model(inputs=X_input, outputs=out)
-    sgd = SGD(lr=0.00001, decay=0.01, momentum=0.9)
-    model.compile(optimizer='sgd',loss='categorical_crossentropy',metrics=[f1_score])
+    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=[f1_score])
     return model
 
 def two_path(input_shape):

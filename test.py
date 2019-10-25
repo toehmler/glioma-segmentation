@@ -24,6 +24,7 @@ if __name__ == '__main__':
 
 
     patient_no = int(patient_no)
+    
 
         
 
