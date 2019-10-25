@@ -7,6 +7,8 @@ import sys
 from keras.models import load_model
 from sklearn.utils.class_weight import compute_class_weight
 
+import keras.backend as K
+
 '''
 with open('config.json') as config_file:
     config = json.load(config_file)
@@ -27,6 +29,24 @@ if len(np.argwhere(tmp_slice[:,:,4] == 0)) != (240*240):
 else:
     print('zeros')
 '''
+def f1_score(y_true, y_pred):
+    # Count positive samples.
+    c1 = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    c2 = K.sum(K.round(K.clip(y_true, 0, 1)))
+    c3 = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    # If there are no true samples, fix the F1 score at 0.
+    if c3 == 0:
+        return 0
+    # How many selected items are relevant?
+    precision = c1 / c2
+    # How many relevant items are selected?
+    recall = c1 / c3
+    # Calculate f1_score
+    f1_score = 2 * (precision * recall) / (precision + recall)
+    return f1_score
+
+
+
 
 
 if __name__ == '__main__':
@@ -38,7 +58,7 @@ if __name__ == '__main__':
         model_name = input('Model name: ')
         patient_no = input('Patient no: ')
 
-    model = load_model('outputs/models/{}_train.h5'.format(model_name))
+    model = load_model('outputs/models/{}_train.h5'.format(model_name), custom_objects={'f1_score': f1_score})
 
     with open('config.json') as config_file:
         config = json.load(config_file)
