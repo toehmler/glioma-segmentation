@@ -25,8 +25,8 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 root = config['root']
 
-patient_no = 204 
-slice_no = 75
+patient_no = 201 
+slice_no = 70
 
 
 with open('config.json') as config_file:
@@ -34,7 +34,7 @@ with open('config.json') as config_file:
 root = config['root']
 patient_path = glob(root + '/*pat{}*'.format(patient_no))
 patient_scans = utils.load_test_scans(patient_path[0])
-patient_scans = utils.norm_test_scans(patient_scans)
+#patient_scans = utils.norm_test_scans(patient_scans)
 
 test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
 test_label = patient_scans[slice_no:slice_no+1,:,:,4]
