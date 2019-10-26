@@ -34,7 +34,7 @@ if __name__ == '__main__':
     json_file.close()
 
     model = model_from_json(loaded_model_json)
-    model.load_weights("outputs/models/{}_train.h5".format(model_name))
+    model.load_weights("{}_train_weights.h5".format(model_name))
 #print(model.summary())
 
     with open('config.json') as config_file:
@@ -50,11 +50,16 @@ if __name__ == '__main__':
     patient_scans = utils.load_test_scans(patient_path[0])
     patient_scans = utils.norm_test_scans(patient_scans)
 
-    for slice_no in range(patient_scans.shape[0]):
-        test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
-        test_label = patient_scans[slice_no:slice_no+1,:,:,4]
-        scan = test_slice[0,:,:,2]
-        tmp_label = test_label[0]
+    slice_no = 70
+
+    patient_no = 204
+
+#    for slice_no in range(patient_scans.shape[0]):
+     test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
+     test_label = patient_scans[slice_no:slice_no+1,:,:,4]
+     scan = test_slice[0,:,:,2]
+     tmp_label = test_label[0]
+
 
 
 # added batch_size of 256 (was none before)
