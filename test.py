@@ -34,6 +34,11 @@ if __name__ == '__main__':
     loaded_model_json = json_file.read()
     json_file.close()
 
+    slice_no = 70
+
+    patient_no = 204
+
+
     model = model_from_json(loaded_model_json)
     model.load_weights("{}_train_weights.h5".format(model_name))
 #print(model.summary())
@@ -50,10 +55,6 @@ if __name__ == '__main__':
     patient_path = glob(root + '/*pat{}*'.format(patient_no))
     patient_scans = utils.load_test_scans(patient_path[0])
     patient_scans = utils.norm_test_scans(patient_scans)
-
-    slice_no = 70
-
-    patient_no = 204
 
 #    for slice_no in range(patient_scans.shape[0]):
     test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
