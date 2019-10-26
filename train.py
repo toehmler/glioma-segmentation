@@ -73,8 +73,8 @@ if __name__ == '__main__':
         slice_found = False
         while slice_found == False:
             tmp_slice = patient_scans[slice_no,:,:,:]
-            gt = patient_scans[:,:,4]
-            if len(np.argwhere(gt==0)) >= (192*152*0.99):
+            gt = patient_scans[slice_no,:,:,4]
+            if len(np.argwhere(gt==0)) >= (192*152):
                 continue
             else:
                 patient_slice = tmp_slice
