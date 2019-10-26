@@ -64,41 +64,41 @@ if __name__ == '__main__':
 
 
 # added batch_size of 256 (was none before)
-        prediction = model.predict(test_slice, batch_size=256, verbose=1)
-        prediction = np.around(prediction)
-        print(prediction.shape)
-        prediction = np.argmax(prediction, axis=-1)
-        print(prediction.shape)
-        pred = prediction[0]
-        print(pred.shape)
-        print(pred)
-        tmp_pred = pred.reshape(208, 208)
-        tmp_pred = np.pad(tmp_pred, (16, 16), mode='edge')
+    prediction = model.predict(test_slice, batch_size=256, verbose=1)
+    prediction = np.around(prediction)
+    print(prediction.shape)
+    prediction = np.argmax(prediction, axis=-1)
+    print(prediction.shape)
+    pred = prediction[0]
+    print(pred.shape)
+    print(pred)
+    tmp_pred = pred.reshape(208, 208)
+    tmp_pred = np.pad(tmp_pred, (16, 16), mode='edge')
 
 
-        plt.figure(figsize=(15, 10))
-        plt.subplot(131)
-        plt.title('Input')
-        plt.imshow(scan, cmap='gray')
-        plt.subplot(132)
-        plt.title('Ground Truth')
-        plt.imshow(tmp_label,cmap='gray')
-        plt.subplot(133)
-        plt.title('Prediction')
-        plt.imshow(tmp_pred,cmap='gray')
-        plt.savefig('outputs/{}_pat{}_slice{}.png'.format(model_name,patient_no,slice_no), bbox_inches='tight')
+    plt.figure(figsize=(15, 10))
+    plt.subplot(131)
+    plt.title('Input')
+    plt.imshow(scan, cmap='gray')
+    plt.subplot(132)
+    plt.title('Ground Truth')
+    plt.imshow(tmp_label,cmap='gray')
+    plt.subplot(133)
+    plt.title('Prediction')
+    plt.imshow(tmp_pred,cmap='gray')
+    plt.savefig('outputs/{}_pat{}_slice{}.png'.format(model_name,patient_no,slice_no), bbox_inches='tight')
 #plt.show()
 
 
 
 
-        y = test_label[0,15:223,15:223]
+    y = test_label[0,15:223,15:223]
 
-        truth = y.reshape(43264,)
-        guess = pred.reshape(43264,)
-        print('slice no {}'.format(slice_no))
+    truth = y.reshape(43264,)
+    guess = pred.reshape(43264,)
+    print('slice no {}'.format(slice_no))
 
-        print(classification_report(truth, guess, labels=[0,1,2,3,4]))
+    print(classification_report(truth, guess, labels=[0,1,2,3,4]))
 
 
 
