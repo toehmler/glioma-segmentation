@@ -12,27 +12,27 @@ def tri_path(input_shape):
 
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    local = BatchNormalization()(local)
+    local = BatchNormalization(momentum=0.75)(local)
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
+    local = BatchNormalization(momentum=0.75)(local)
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
+    local = BatchNormalization(momentum=0.75)(local)
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
+    local = BatchNormalization(momentum=0.75)(local)
 
     inter = Conv2D(64, (7,7),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    inter = BatchNormalization()(inter)
+    inter = BatchNormalization(momentum=0.75)(inter)
     inter = Conv2D(64, (7,7),
             strides=(1,1), padding='valid', activation='relu')(inter)
-    inter = BatchNormalization()(inter)
+    inter = BatchNormalization(momentum=0.75)(inter)
 
     uni = Conv2D(160, (13,13),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    uni = BatchNormalization()(uni)
+    uni = BatchNormalization(momentum=0.75)(uni)
 
     out = Concatenate()([local, inter, uni])
     out = Conv2D(5,(21,21),strides=(1,1),padding='valid')(out)
