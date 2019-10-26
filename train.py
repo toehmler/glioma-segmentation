@@ -70,21 +70,6 @@ if __name__ == '__main__':
 
 
 
-    x, labels = utils.training_patches(patient_slice)
-    class_weights = compute_class_weight('balanced',np.unique(labels),labels)
-    y = np.zeros((labels.shape[0],1,1,5))
-    for i in range(labels.shape[0]):
-         y[i,:,:,labels[i]] = 1
-
-    
-    print('Patient {} - Slice {}'.format(patient_no, slice_no))
-    model.fit(x,y,epochs=3,batch_size=1024,class_weight=class_weights, validation_split=0.4)
-    model.save('outputs/models/{}_train.h5'.format(model_name))
-    model.save_weights('{}_train_weights.h5'.format(model_name))
- 
-    
-    
-
     for slice_no, patient_slice in enumerate(patient_scans):
         gt = patient_slice[:,:,4]
         # exclude slices without any tumor present
