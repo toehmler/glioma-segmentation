@@ -56,10 +56,10 @@ if __name__ == '__main__':
     patient_no = 204
 
 #    for slice_no in range(patient_scans.shape[0]):
-     test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
-     test_label = patient_scans[slice_no:slice_no+1,:,:,4]
-     scan = test_slice[0,:,:,2]
-     tmp_label = test_label[0]
+    test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
+    test_label = patient_scans[slice_no:slice_no+1,:,:,4]
+    scan = test_slice[0,:,:,2]
+    tmp_label = test_label[0]
 
 
 
