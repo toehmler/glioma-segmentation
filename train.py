@@ -92,7 +92,7 @@ if __name__ == '__main__':
         #if len(np.argwhere(gt == 0)) == (240 * 240):
         # check if more than 97% of slice is 0
         #check if more than 96% of slice is 0
-        if len(np.argwhere(gt==0)) => (192*152*0.98):
+        if len(np.argwhere(gt==0)) >= (192*152*0.98):
             continue
         x, labels = utils.training_patches(patient_slice)
         class_weights = compute_class_weight('balanced',np.unique(labels),labels)
