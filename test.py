@@ -15,12 +15,13 @@ import sys
 #load json and create model
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 2:
         model_name = sys.argv[1]
-        patient_no = sys.argv[2]
+        #patient_no = sys.argv[2]
     else:
         model_name = input('Model name: ')
-        patient_no = input('Patient no: ')
+        #patient_no = input('Patient no: ')
+
 
 
     patient_no = int(patient_no)
