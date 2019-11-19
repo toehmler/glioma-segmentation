@@ -96,6 +96,8 @@ def training_patches(slice):
             labels.append(int(label))
     return np.array(patches), np.array(labels)
 
+
+
 def rename_pat_dirs(root):
     os.chdir(root)
     pat_dirs = os.listdir(os.getcwd())

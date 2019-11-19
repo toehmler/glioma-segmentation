@@ -34,12 +34,16 @@ if __name__ == '__main__':
     loaded_model_json = json_file.read()
     json_file.close()
 
-    slice_no = 70
+
+    slice_no = 91 
 
     patient_no = 204
 
 
     model = model_from_json(loaded_model_json)
+
+
+
     model.load_weights("{}_train_weights.h5".format(model_name))
 #print(model.summary())
 
