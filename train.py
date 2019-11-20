@@ -56,7 +56,9 @@ if __name__ == '__main__':
         patient_no = sys.argv[2]
     else:
         model_name = input('Model name: ')
-        patient_no = input('Patient no: ')
+        start_pat = input('Start patient: ')
+        end_pat = input('End patient: ')
+        num_patches = input('Number of patches for each slice: ')
 
     model = load_model('outputs/models/{}_train.h5'.format(model_name), custom_objects={'f1_score': f1_score})
 
@@ -64,11 +66,40 @@ if __name__ == '__main__':
         config = json.load(config_file)
     root = config['root']
     
-    patient_path = glob(root + '/*pat{}*'.format(patient_no))
-    patient_scans = utils.load_scans(patient_path[0])
-    patient_scans = utils.norm_scans(patient_scans)
+    patient_idx = int(start_pat)
+    patches = []
+    labels = []
+    while patient_idx <= int(end_pat):
+        print("Processing patient {}".format(patient_idx))
+        path = glob(root + '/*pat{}*'.format(patient_idx))
+        scans = utils.load_scans(path[0])
+        scans = utils.norm_scans(scans)
+        patient_x, patient_y = utils.generate_patient_patches(scans, int(num_patches))
+        patches.extend(patient_x)
+        labels.extend(patient_y)
+        patient_idx = patient_idx + 1
+    
+    patches = np.array(patches)
+    labels = np.array(labels)
 
+    shuffle = list(zip(patches, labels))
+    np.random.shuffle(shuffle)
+    x, tmp_y = zip(*shuffle)
+    x = np.array(x)
+    tmp_y = np.array(tmp_y)
 
+    class_weights = compute_class_weight('balanced',np.unique(tmp_y), tmp_y)
+
+    # reshape labels to (1,1,5) with one hot encoding
+    y = np.zeros((tmp_y.shape[0],1,1,5))
+    for i in range(tmp_y.shape[0]):
+        y[i,:,:,tmp_y[i]] = 1
+
+    print("patches shape: {}".format(x.shape))
+    print("labels shape: {}".format(y.shape))
+    '''
+
+           
 
     for slice_no, patient_slice in enumerate(patient_scans):
         gt = patient_slice[:,:,4]
@@ -91,6 +122,7 @@ if __name__ == '__main__':
         model.fit(x,y,epochs=3,batch_size=128,class_weight=class_weights, validation_split=0.2)
         model.save('outputs/models/{}_train.h5'.format(model_name))
         model.save_weights('{}_train_weights.h5'.format(model_name))
+    '''
 
 
 

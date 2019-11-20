@@ -4,6 +4,8 @@ import numpy as np
 import json
 import os
 from sklearn.utils.class_weight import compute_class_weight
+import random
+from tqdm import tqdm
 
 # TODO add n4 bias correction from og repo
 
@@ -18,8 +20,9 @@ def load_scans(path):
     scans = [stik.GetArrayFromImage(stik.ReadImage(paths[mod])) 
             for mod in range(len(paths))]
     scans = np.array(scans)
+    return scans
     # remove extra bg by cropping each volume to size of (146,192,152) 
-    return scans[:,1:147, 29:221, 42:194]
+    # return scans[:,1:147, 29:221, 42:194]
 
 def load_test_scans(path):
     flair = glob(path + '/*Flair*/*.mha')
@@ -55,10 +58,10 @@ def norm_test_scans(scans):
     return normed_test_scans
 
 def norm_scans(scans):
-    normed_scans = np.zeros((146, 192, 152, 5)).astype(np.float32)
+    normed_scans = np.zeros((155, 240, 240, 5)).astype(np.float32)
     normed_scans[:,:,:,4] = scans[4,:,:,:]
     for mod_idx in range(4):
-        for slice_idx in range(146):
+        for slice_idx in range(155):
             normed_slice = norm_slice(scans[mod_idx,slice_idx,:,:])
             normed_scans[slice_idx,:,:,mod_idx] = normed_slice
     return normed_scans
@@ -86,7 +89,7 @@ def training_patches(slice):
     size = 33
     patches = []
     labels = []
-    grid = [(h, w) for h in range(192) for w in range(152)]
+    grid = [(h, w) for h in range(240) for w in range(240)]
     for x, y in grid:
         bounds = find_bounds([x, y], size)
         patch = slice[bounds[0]:bounds[1],bounds[2]:bounds[3],:4]
@@ -97,6 +100,24 @@ def training_patches(slice):
     return np.array(patches), np.array(labels)
 
 
+def generate_patient_patches(scans, num_patches):
+    pbar = tqdm(total=155)
+    patches = []
+    labels = []
+    for patient_slice in scans:
+        pbar.update(1)
+        gt = patient_slice[:,:,4]
+        if len(np.argwhere(gt == 0)) >= 240*240:
+            continue
+        slice_x, slice_y = training_patches(patient_slice)
+        slice_total = zip(slice_x, slice_y)
+        slice_subset = random.sample(list(slice_total), num_patches)
+        new_x, new_y = zip(*slice_subset)
+        patches.extend(new_x)
+        labels.extend(new_y)
+    pbar.close()
+    return np.array(patches), np.array(labels)
+        
 
 def rename_pat_dirs(root):
     os.chdir(root)
@@ -112,6 +133,28 @@ if __name__ == '__main__':
     #rename_pat_dirs(root)
     patient = glob(root + '/*pat0*')
     scans = load_scans(patient[0])
+    scans = norm_scans(scans)
+
+    test_x, test_y = generate_patient_patches(scans, 500)
+    print("test x shape: {}".format(test_x.shape))
+    print("test y shape: {}".format(test_y.shape))
+
+
+
+    '''
+    slice = scans[80]
+    slice_x, slice_y = training_patches(slice)
+    slice_patches = zip(slice_x, slice_y)
+    slice_subset = random.sample(list(slice_patches), 100)
+    new_x, new_y = zip(*slice_subset)
+    new_x = np.array(new_x)
+    new_y = np.array(new_y)
+    print(new_x.shape)
+    print(new_y.shape)
+    '''
+    
+
+
 
 
     
