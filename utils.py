@@ -104,6 +104,79 @@ def training_patches(slice, num_patches):
     labels = np.array(labels)
     return patches, labels
 
+def generate_balanced(scans):
+    class_label = 0
+    gt = scans[:,:,:,4]
+    class_labels = [0, 1, 2, 3, 4]
+    arg_labels = [np.argwhere(gt == label) for label in class_labels]
+    ones = arg_labels[0]
+    twos = arg_labels[1]
+    threes = arg_labels[2]
+    fours = arg_labels[3]
+    fives = arg_labels[4]
+    print("shape: {}".format(ones.shape))
+    print("shape: {}".format(twos.shape))
+    print("shape: {}".format(threes.shape))
+    print("shape: {}".format(fours.shape))
+    print("shape: {}".format(fives.shape))
+    min_arg = min([len(arg_label) for arg_label in arg_labels])
+    print("min arg: {}".format(min_arg))
+
+    patches = []
+    labels = []
+
+    for arg_label in arg_labels:
+        if len(arg_label) == min_arg:
+            for idx in arg_label:
+                bounds = find_bounds([idx[1], idx[2]], 33)
+                patch = scans[idx[0], bounds[0]:bounds[1], bounds[2]:bounds[3],:4]
+                label = int(scans[idx[0], idx[1], idx[2], 4])
+                if patch.shape != (33, 33, 4):
+                    continue
+                if len(np.argwhere(patch == 0)) > (33 * 33):
+                    continue
+                patches.append(patch)
+                labels.append(label)
+        else:
+            count = 0
+            while count < min_arg:
+                sample = random.choice(arg_label)
+                bounds = find_bounds([sample[1], sample[2]], 33)
+                patch = scans[sample[0], bounds[0]:bounds[1], bounds[2]:bounds[3], :4]
+                label = int(scans[sample[0], sample[1], sample[2], 4])
+                if patch.shape != (33, 33, 4):
+                    continue
+                if len(np.argwhere(patch == 0)) > (33 * 33):
+                    continue
+                patches.append(patch)
+                labels.append(label)
+                count = count + 1
+    patches = np.array(patches)
+    labels = np.array(labels)
+    print("patches shape: {}".format(patches.shape))
+    print("labels shape: {}".format(labels.shape))
+    return patches, labels
+
+
+
+
+    '''
+
+    ones_patches = []
+    for idx in twos:
+        loc = idx[1:]
+        bounds = find_bounds([loc[0], loc[1]], 33)
+        patch = scans[idx[0], bounds[0]:bounds[1], bounds[2]:bounds[3],:4]
+        label = scans[idx[0], idx[1], idx[2], 4]
+        if patch.shape != (33, 33, 4):
+            continue
+        if len(np.argwhere(patch == 0)) > (33 * 33):
+            continue
+        ones_patches.append(patch)
+    ones_patches = np.array(ones_patches)
+    print(ones_patches.shape)
+    '''
+
 
 def generate_patient_patches(scans, num_patches):
     pbar = tqdm(total=155)
@@ -120,7 +193,6 @@ def generate_patient_patches(scans, num_patches):
     pbar.close()
     patches = np.array(patches)
     labels = np.array(labels)
-    return patches, labels
         
 
 def rename_pat_dirs(root):
@@ -130,19 +202,34 @@ def rename_pat_dirs(root):
     for i, pat_dir in enumerate(pat_dirs):
         os.rename(pat_dir, 'pat{}'.format(i))
    
+    #class_nums = min([len(np.argwhere(gt == label)) for label in class_labels])
+
+
+
+
 if __name__ == '__main__':
     with open('config.json') as config_file:
         config = json.load(config_file)
     root = config['root']
+    patches = []
+    labels = []
     #rename_pat_dirs(root)
-    patient = glob(root + '/*pat0*')
-    scans = load_scans(patient[0])
-    scans = norm_scans(scans)
-
-    test_x, test_y = generate_patient_patches(scans, 500)
-    print("test x shape: {}".format(test_x.shape))
-    print("test y shape: {}".format(test_y.shape))
-
+    start_patient = input("start patient: ")
+    end_patient = input("end patient: ")
+    pat_idx = int(start_patient)
+    while pat_idx <= int(end_patient):
+        print("Processing patient: {}".format(pat_idx))
+        path = glob(root + '/*pat{}*'.format(pat_idx))
+        scans = load_scans(path[0])
+        scans = norm_scans(scans)
+        balanced_x, balanced_y = generate_balanced(scans)
+        patches.extend(balanced_x)
+        labels.extend(balanced_y)
+        pat_idx = pat_idx + 1
+    patches = np.array(patches)
+    labels = np.array(labels)
+    print("patch shape: {}".format(patches.shape))
+    print("labels shape: {}".format(labels.shape))
 
 
     '''
