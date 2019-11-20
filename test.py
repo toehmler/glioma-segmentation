@@ -35,9 +35,9 @@ if __name__ == '__main__':
     json_file.close()
 
 
-    slice_no = 91 
+    slice_no = 70 
 
-    patient_no = 204
+    patient_no = 190 
 
 
     model = model_from_json(loaded_model_json)

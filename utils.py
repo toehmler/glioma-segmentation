@@ -85,7 +85,7 @@ def find_bounds(center, size):
     bounds = np.array([top, bottom, left, right]).astype(int)
     return bounds
 
-def training_patches(slice):
+def training_patches(slice, num_patches):
     size = 33
     patches = []
     labels = []
@@ -97,7 +97,12 @@ def training_patches(slice):
         if patch.shape == (size,size,4):
             patches.append(patch)
             labels.append(int(label))
-    return np.array(patches), np.array(labels)
+    total = zip(patches, labels)
+    subset = random.sample(list(total), num_patches)
+    patches, labels = zip(*subset)
+    patches = np.array(patches)
+    labels = np.array(labels)
+    return patches, labels
 
 
 def generate_patient_patches(scans, num_patches):
@@ -109,14 +114,13 @@ def generate_patient_patches(scans, num_patches):
         gt = patient_slice[:,:,4]
         if len(np.argwhere(gt == 0)) >= 240*240:
             continue
-        slice_x, slice_y = training_patches(patient_slice)
-        slice_total = zip(slice_x, slice_y)
-        slice_subset = random.sample(list(slice_total), num_patches)
-        new_x, new_y = zip(*slice_subset)
-        patches.extend(new_x)
-        labels.extend(new_y)
+        slice_x, slice_y = training_patches(patient_slice, num_patches)
+        patches.extend(slice_x)
+        labels.extend(slice_y)
     pbar.close()
-    return np.array(patches), np.array(labels)
+    patches = np.array(patches)
+    labels = np.array(labels)
+    return patches, labels
         
 
 def rename_pat_dirs(root):
