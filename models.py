@@ -14,30 +14,30 @@ def tri_path(input_shape):
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     local = BatchNormalization(momentum=0.75)(local)
-    local = Dropout(0.5)(local)
+    local = Dropout(0.25)(local)
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization(momentum=0.75)(local)
-    local = Dropout(0.5)(local)
+    local = Dropout(0.25)(local)
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization(momentum=0.75)(local)
-    local = Dropout(0.5)(local)
+    local = Dropout(0.25)(local)
 
     local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization(momentum=0.75)(local)
-    local = Dropout(0.5)(local)
+    local = Dropout(0.25)(local)
 
     inter = Conv2D(64, (7,7),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     inter = BatchNormalization(momentum=0.75)(inter)
-    inter = Dropout(0.5)(inter)
+    inter = Dropout(0.25)(inter)
 
     inter = Conv2D(64, (7,7),
             strides=(1,1), padding='valid', activation='relu')(inter)
     inter = BatchNormalization(momentum=0.75)(inter)
-    inter = Dropout(0.5)(inter)
+    inter = Dropout(0.25)(inter)
 
     uni = Conv2D(160, (13,13),
             strides=(1,1), padding='valid', activation='relu')(X_input)

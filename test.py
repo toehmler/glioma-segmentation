@@ -15,12 +15,15 @@ import sys
 #load json and create model
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 4:
         model_name = sys.argv[1]
+        patient_no = int(sys.argv[2])
+        slice_no = int(sys.argv[3])
         #patient_no = sys.argv[2]
     else:
         model_name = input('Model name: ')
-        #patient_no = input('Patient no: ')
+        patient_no = int(input('Patient no: '))
+        slice_no = int(input('Slice no: '))
 
 
 
@@ -35,16 +38,13 @@ if __name__ == '__main__':
     json_file.close()
 
 
-    slice_no = 70 
-
-    patient_no = 190 
 
 
     model = model_from_json(loaded_model_json)
 
 
 
-    model.load_weights("{}_train_weights.h5".format(model_name))
+    model.load_weights("outputs/models/{}_train.h5".format(model_name))
 #print(model.summary())
 
     with open('config.json') as config_file:

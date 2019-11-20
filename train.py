@@ -83,7 +83,7 @@ if __name__ == '__main__':
         y = np.zeros((labels.shape[0],1,1,5))
         for i in range(labels.shape[0]):
             y[i,:,:,labels[i]] = 1
-        model.fit(x,y,epochs=3,batch_size=1024,class_weight=class_weights, validation_split=0.2)
+        model.fit(x,y,epochs=3,batch_size=256,class_weight=class_weights, validation_split=0.2)
         model.save('outputs/models/{}_train.h5'.format(model_name))
         model.save_weights('outputs/models/{}_train_weights.h5'.format(model_name))
         patient_idx = patient_idx + 1
