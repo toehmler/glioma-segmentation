@@ -67,36 +67,28 @@ if __name__ == '__main__':
     root = config['root']
     
     patient_idx = int(start_pat)
-    patches = []
-    labels = []
     while patient_idx <= int(end_pat):
         print("Processing patient {}".format(patient_idx))
         path = glob(root + '/*pat{}*'.format(patient_idx))
         scans = utils.load_scans(path[0])
         scans = utils.norm_scans(scans)
         patient_x, patient_y = utils.generate_patient_patches(scans, int(num_patches))
-        patches.extend(patient_x)
-        labels.extend(patient_y)
+        shuffle = list(zip(patient_x, patient_y))
+        np.random.shuffle(shuffle)
+        x, labels = zip(*shuffle)
+        x = np.array(x)
+        labels = np.array(labels)
+        class_weights = compute_class_weight('balanced', np.unique(labels), labels)
+        # reshape labels to (1,1,5) with one hot encoding
+        y = np.zeros((labels.shape[0],1,1,5))
+        for i in range(labels.shape[0]):
+            y[i,:,:,labels[i]] = 1
+        model.fit(x,y,epochs=3,batch_size=1024,class_weight=class_weights, validation_split=0.2)
+        model.save('outputs/models/{}_train.h5'.format(model_name))
+        model.save_weights('outputs/models/{}_train_weights.h5'.format(model_name))
         patient_idx = patient_idx + 1
-    
-    patches = np.array(patches)
-    labels = np.array(labels)
 
-    shuffle = list(zip(patches, labels))
-    np.random.shuffle(shuffle)
-    x, tmp_y = zip(*shuffle)
-    x = np.array(x)
-    tmp_y = np.array(tmp_y)
 
-    class_weights = compute_class_weight('balanced',np.unique(tmp_y), tmp_y)
-
-    # reshape labels to (1,1,5) with one hot encoding
-    y = np.zeros((tmp_y.shape[0],1,1,5))
-    for i in range(tmp_y.shape[0]):
-        y[i,:,:,tmp_y[i]] = 1
-
-    print("patches shape: {}".format(x.shape))
-    print("labels shape: {}".format(y.shape))
     '''
 
            
