@@ -51,6 +51,7 @@ if __name__ == '__main__':
     pred = []
 
 
+    counter = 0 
     pbar = tqdm(total = patient_scans.shape[0])
     for slice_no in range(patient_scans.shape[0]):
         test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
@@ -65,6 +66,10 @@ if __name__ == '__main__':
         gt.extend(truth)
         pred.extend(prediction)
         pbar.update(1)
+        counter += 1
+        if counter > 5:
+            break
+
 
     pbar.close()
     gt = np.array(gt)
@@ -82,9 +87,11 @@ if __name__ == '__main__':
     spec_en = specificity_en(pred, gt)
     spec_core = specificity_core(pred, gt)
 
+    '''
     haus_whole = hausdorff_whole(pred, gt)
     haus_en = hausdorff_en(pred, gt)
     haus_core = hausdorff_core(pred, gt)
+    '''
 
     print("=======================================")
     print("Dice whole tumor score: {:0.4f}".format(dice_whole)) 
@@ -98,10 +105,12 @@ if __name__ == '__main__':
     print("Specificity whole tumor score: {:0.4f}".format(spec_whole)) 
     print("Specificity enhancing tumor score: {:0.4f}".format(spec_en)) 
     print("Specificity core tumor score: {:0.4f}".format(spec_core)) 
+    '''
     print("=======================================")
     print("Hausdorff whole tumor score: {:0.4f}".format(haus_whole)) 
     print("Hausdorff enhancing tumor score: {:0.4f}".format(haus_en)) 
     print("Hausdorff core tumor score: {:0.4f}".format(haus_core)) 
+    '''
     print("=======================================\n\n")
 
 
