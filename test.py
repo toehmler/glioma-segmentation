@@ -55,14 +55,17 @@ if __name__ == '__main__':
     for slice_no in range(patient_scans.shape[0]):
         test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
         test_label = patient_scans[slice_no:slice_no+1,:,:,4] 
-        prediction = model.predict(test_slice, batch_size=256, verbose=1)
+        prediction = model.predict(test_slice, batch_size=256, verbose=0)
+        prediction = prediction[0]
         prediction = np.around(prediction)
         prediction = np.argmax(prediction, axis=-1)
         truth = test_label[0,15:223,15:223]
-        truth = truth.reshape(43264,)
+#        truth = truth.reshape(43264,)
+#        prediction = prediction.reshape(43264,)
         gt.extend(truth)
         pred.extend(prediction)
         pbar.update(1)
+
     pbar.close()
     gt = np.array(gt)
     pred = np.array(pred)
@@ -100,8 +103,6 @@ if __name__ == '__main__':
     print("Hausdorff enhancing tumor score: {:0.4f}".format(haus_en)) 
     print("Hausdorff core tumor score: {:0.4f}".format(haus_core)) 
     print("=======================================\n\n")
-
-
 
 
 
