@@ -87,8 +87,8 @@ if __name__ == '__main__':
     y = np.zeros((labels.shape[0],1,1,5))
     for i in range(labels.shape[0]):
         y[i,:,:,labels[i]] = 1
-    print("patches shape: {}".format(patches.shape))
-    print("labels shape: {}".format(labels.shape))
+#    print("patches shape: {}".format(patches.shape))
+#    print("labels shape: {}".format(labels.shape))
     model.fit(patches, y, epochs = 6, batch_size = 256, validation_split = 0.2)
     model.save('outputs/models/{}_train.h5'.format(model_name))
     model.save_weights('outputs/models/{}_train_weights.h5'.format(model_name))

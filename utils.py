@@ -109,18 +109,7 @@ def generate_balanced(scans):
     gt = scans[:,:,:,4]
     class_labels = [0, 1, 2, 3, 4]
     arg_labels = [np.argwhere(gt == label) for label in class_labels]
-    ones = arg_labels[0]
-    twos = arg_labels[1]
-    threes = arg_labels[2]
-    fours = arg_labels[3]
-    fives = arg_labels[4]
-    print("shape: {}".format(ones.shape))
-    print("shape: {}".format(twos.shape))
-    print("shape: {}".format(threes.shape))
-    print("shape: {}".format(fours.shape))
-    print("shape: {}".format(fives.shape))
     min_arg = min([len(arg_label) for arg_label in arg_labels])
-    print("min arg: {}".format(min_arg))
 
     patches = []
     labels = []
@@ -153,8 +142,8 @@ def generate_balanced(scans):
                 count = count + 1
     patches = np.array(patches)
     labels = np.array(labels)
-    print("patches shape: {}".format(patches.shape))
-    print("labels shape: {}".format(labels.shape))
+#    print("patches shape: {}".format(patches.shape))
+#    print("labels shape: {}".format(labels.shape))
     return patches, labels
 
 
