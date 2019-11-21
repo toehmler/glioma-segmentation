@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
         scan = test_slice[0,:,:,2]
         tmp_label = test_label[0]
-        tmp_pred = pred.reshape(208, 208)
+        tmp_pred = prediction.reshape(208, 208)
         tmp_pred = np.pad(tmp_pred, (16,16), mode='edge')
 
 
