@@ -62,6 +62,25 @@ if __name__ == '__main__':
         truth = test_label[0,15:223,15:223]
 #        truth = truth.reshape(43264,)
 #        prediction = prediction.reshape(43264,)
+
+        scan = test_slice[0,:,:,2]
+        tmp_label = test_label[0]
+        tmp_pred = pred.reshape(208, 208)
+        tmp_pred = np.pad(tmp_pred, (16,16), mode='edge')
+
+
+        plt.figure(figsize=(15, 10))
+        plt.subplot(131)
+        plt.title('Input')
+        plt.imshow(scan, cmap='gray')
+        plt.subplot(132)
+        plt.title('Ground Truth')
+        plt.imshow(tmp_label,cmap='gray')
+        plt.subplot(133)
+        plt.title('Prediction')
+        plt.imshow(tmp_pred,cmap='gray')
+        plt.savefig('outputs/{}_pat{}_slice{}.png'.format(model_name,patient_no,slice_no), bbox_inches='tight')
+
         gt.extend(truth)
         pred.extend(prediction)
         pbar.update(1)
