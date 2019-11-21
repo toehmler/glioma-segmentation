@@ -63,6 +63,7 @@ if __name__ == '__main__':
 #        truth = truth.reshape(43264,)
 #        prediction = prediction.reshape(43264,)
 
+        '''
         scan = test_slice[0,:,:,2]
         tmp_label = test_label[0]
         tmp_pred = prediction.reshape(208, 208)
@@ -81,6 +82,7 @@ if __name__ == '__main__':
         plt.imshow(tmp_pred,cmap='gray')
         plt.savefig('outputs/{}_pat{}_slice{}.png'.format(model_name,patient_no,slice_no), bbox_inches='tight')
         plt.close(fig)
+        '''
 
         gt.extend(truth)
         pred.extend(prediction)
