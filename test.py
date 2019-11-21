@@ -69,7 +69,7 @@ if __name__ == '__main__':
         tmp_pred = np.pad(tmp_pred, (16,16), mode='edge')
 
 
-        plt.figure(figsize=(15, 10))
+        fig = plt.figure(figsize=(15, 10))
         plt.subplot(131)
         plt.title('Input')
         plt.imshow(scan, cmap='gray')
@@ -78,8 +78,9 @@ if __name__ == '__main__':
         plt.imshow(tmp_label,cmap='gray')
         plt.subplot(133)
         plt.title('Prediction')
-#        plt.imshow(tmp_pred,cmap='gray')
+        plt.imshow(tmp_pred,cmap='gray')
         plt.savefig('outputs/{}_pat{}_slice{}.png'.format(model_name,patient_no,slice_no), bbox_inches='tight')
+        plt.close(fig)
 
         gt.extend(truth)
         pred.extend(prediction)
