@@ -51,7 +51,6 @@ if __name__ == '__main__':
     pred = []
 
 
-    counter = 0 
     pbar = tqdm(total = patient_scans.shape[0])
     for slice_no in range(patient_scans.shape[0]):
         test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
@@ -66,9 +65,6 @@ if __name__ == '__main__':
         gt.extend(truth)
         pred.extend(prediction)
         pbar.update(1)
-        counter += 1
-        if counter > 5:
-            break
 
 
     pbar.close()
