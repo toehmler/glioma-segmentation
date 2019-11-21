@@ -1,0 +1,13 @@
+sudo apt update
+sudo apt install python3-pip
+sudo apt install awscli
+aws configure
+aws s3 cp s3://midd-brats/brats_data brats_data --recursive
+git clone https://github.com/toehmler/glioma-segmentation
+pip3 install tensorflow SimpleITK numpy scikit-learn tqdm keras
+pip3 install SimpleITK
+pip3 install numpy
+pip3 install scikit-learn 
+pip3 install tqdm
+pip3 install keras tensorflow
+
