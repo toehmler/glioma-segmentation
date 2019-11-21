@@ -20,9 +20,5 @@ pip3 install tqdm
 pip3 install keras tensorflow
 pip3 install matplotlib imageio scikit-image
 
-AWS_AK = AKIAJF7N6APYO523LDNQ
-AWS_SECRET = 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
-
-
 * allow udp firewall 60000-61000 *
 sudo apt install mosh
