@@ -49,19 +49,17 @@ def f1_score(y_true, y_pred):
     f1_score = 2 * (precision * recall) / (precision + recall)
     return f1_score
 
-def on_epoch_begin(self, epoch, logs={}):
-    optimizer = self.model.optimizer
-    lr = K.get_value(optimizer.lr)
-    decay = K.get_value(optimizer.decay)
-    lr=lr/10
-    decay=decay*10
-    K.set_value(optimizer.lr, lr)
-    K.set_value(optimizer.decay, decay)
-    print('LR changed to:',lr)
-    print('Decay changed to:',decay)
-
-
-
+class SGDLearningRateTracker(Callback):
+    def on_epoch_begin(self, epoch, logs={}):
+        optimizer = self.model.optimizer
+        lr = K.get_value(optimizer.lr)
+        decay = K.get_value(optimizer.decay)
+        lr=lr/10
+        decay=decay*10
+        K.set_value(optimizer.lr, lr)
+        K.set_value(optimizer.decay, decay)
+        print('LR changed to:',lr)
+        print('Decay changed to:',decay)
 
 if __name__ == '__main__':
     if len(sys.argv) == 3 and sys.argv[2] == 'help':
@@ -128,7 +126,7 @@ if __name__ == '__main__':
             validation_split = vs,
             verbose = 1,
             callbacks = [checkpointer, 
-                SGDLearningRateTracker()])
+                         SGDLearningRateTracker()])
 
     model.fit(patches, y, epochs = eps, batch_size = bs, validation_split = vs)
     model.save('outputs/models/{}_train.h5'.format(model_name))
