@@ -58,11 +58,7 @@ def tri_path(input_shape):
 
     model = Model(inputs=X_input, outputs=out)
 
-    #model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=[f1_score])
-    model.compile(loss='categorical_crossentropy', 
-                  optimizer='adam', metrics=[dice_whole_metric,
-                                          dice_core_metric,
-                                          dice_en_metric])
+    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=[f1_score])
 
     return model
 

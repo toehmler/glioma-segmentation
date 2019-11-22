@@ -86,10 +86,7 @@ if __name__ == '__main__':
     '''
 
     model = load_model('outputs/models/{}_train.h5'.format(model_name), 
-            custom_objects={'gen_dice_loss': gen_dice_loss,
-                            'dice_whole_metric':dice_whole_metric,
-                            'dice_core_metric':dice_core_metric,
-                            'dice_en_metric':dice_en_metric})
+            custom_objects={'f1': f1_score})
 
     with open('config.json') as config_file:
         config = json.load(config_file)
