@@ -64,9 +64,9 @@ def on_epoch_begin(self, epoch, logs={}):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2 and sys.argv[1] == 'help':
+    if len(sys.argv) == 3 and sys.argv[2] == 'help':
         print('python3 train.py [model_name] [start_patient] [end_patient] [batch_size] [epochs] [validation_split]')
-    elif len(sys.argv) == 3:
+    elif len(sys.argv) == 7:
         model_name = sys.argv[1]
         start_pat = sys.argv[2]
         end_pat = sys.argv[3]
