@@ -8,6 +8,10 @@ from keras.models import load_model
 from sklearn.utils.class_weight import compute_class_weight
 import random
 import keras.backend as K
+from losses import *
+from keras.callbacks import  ModelCheckpoint,Callback,LearningRateScheduler
+
+
 
 '''
 with open('config.json') as config_file:
@@ -45,22 +49,49 @@ def f1_score(y_true, y_pred):
     f1_score = 2 * (precision * recall) / (precision + recall)
     return f1_score
 
+def on_epoch_begin(self, epoch, logs={}):
+    optimizer = self.model.optimizer
+    lr = K.get_value(optimizer.lr)
+    decay = K.get_value(optimizer.decay)
+    lr=lr/10
+    decay=decay*10
+    K.set_value(optimizer.lr, lr)
+    K.set_value(optimizer.decay, decay)
+    print('LR changed to:',lr)
+    print('Decay changed to:',decay)
 
 
 
 
 if __name__ == '__main__':
-
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 2 and sys.argv[1] == 'help':
+        print('python3 train.py [model_name] [start_patient] [end_patient] [batch_size] [epochs] [validation_split]')
+    elif len(sys.argv) == 3:
         model_name = sys.argv[1]
-        patient_no = sys.argv[2]
+        start_pat = sys.argv[2]
+        end_pat = sys.argv[3]
+        bs = sys.argv[4]
+        eps = sys.argv[5]
+        vs = sys.argv[6]
     else:
         model_name = input('Model name: ')
         start_pat = input('Start patient: ')
         end_pat = input('End patient: ')
-        num_patches = input('Number of patches for each slice: ')
+        bs = input('Epochs: ')
+        eps = input('Batch size: ')
+        vs = input('Validation split: ')
 
-    model = load_model('outputs/models/{}_train.h5'.format(model_name), custom_objects={'f1_score': f1_score})
+
+    '''
+    model = load_model('outputs/models/{}_train.h5'.format(model_name), 
+            custom_objects={'f1_score': f1_score})
+    '''
+
+    model = load_model('outputs/models/{}_train.h5'.format(model_name), 
+            custom_objects={'gen_dice_loss': gen_dice_loss,
+                            'dice_whole_metric':dice_whole_metric,
+                            'dice_core_metric':dice_core_metric,
+                            'dice_en_metric':dice_en_metric})
 
     with open('config.json') as config_file:
         config = json.load(config_file)
@@ -87,11 +118,22 @@ if __name__ == '__main__':
     y = np.zeros((labels.shape[0],1,1,5))
     for i in range(labels.shape[0]):
         y[i,:,:,labels[i]] = 1
-#    print("patches shape: {}".format(patches.shape))
-#    print("labels shape: {}".format(labels.shape))
-    model.fit(patches, y, epochs = 10, batch_size = 256, validation_split = 0.2)
+
+    checkpointer = ModelCheckpoint('outputs/models/{}.{epoch:02d}--{val_loss:.2f}.hdf5'.format(model_name), verbose = 1)
+    model.fit(patches, y,
+            epochs = eps,
+            batch_size = bs,
+            validation_split = vs,
+            verbose = 1,
+            callbacks = [checkpointer, 
+                SGDLearningRateTracker()])
+
+    model.fit(patches, y, epochs = eps, batch_size = bs, validation_split = vs)
     model.save('outputs/models/{}_train.h5'.format(model_name))
-    model.save_weights('outputs/models/{}_train_weights.h5'.format(model_name))
+    weights = '/outputs/models/{}.hdf5'.format(model_name)
+    self.model.save_weights(weights)
+    print('Model weights saved')
+
 
 
     '''

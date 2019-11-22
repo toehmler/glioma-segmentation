@@ -16,12 +16,14 @@ from metrics import *
 #load json and create model
 
 if __name__ == '__main__':
-    if len(sys.argv) == 4:
+    if len(sys.argv) == 3:
         model_name = sys.argv[1]
         patient_no = int(sys.argv[2])
+        img_flag = sys.argv[4]
     else:
         model_name = input('Model name: ')
         patient_no = int(input('Patient no: '))
+        img_flag = sys.argv[4]
 #        slice_no = int(input('Slice no: '))
 
     json_file = open('outputs/models/tri_path_test.json', 'r')
@@ -29,16 +31,11 @@ if __name__ == '__main__':
     json_file.close()
     model = model_from_json(loaded_model_json)
 
-
-
     model.load_weights("outputs/models/{}_train.h5".format(model_name))
-#print(model.summary())
 
     with open('config.json') as config_file:
         config = json.load(config_file)
     root = config['root']
-
-
 
     with open('config.json') as config_file:
         config = json.load(config_file)
@@ -50,6 +47,11 @@ if __name__ == '__main__':
     gt = []
     pred = []
 
+    if img_flag == '-i' or img_flag == 'y':
+        save_img = True
+    else:
+        save_img = False
+
 
     pbar = tqdm(total = patient_scans.shape[0])
     for slice_no in range(patient_scans.shape[0]):
@@ -60,27 +62,27 @@ if __name__ == '__main__':
         prediction = np.around(prediction)
         prediction = np.argmax(prediction, axis=-1)
         truth = test_label[0,15:223,15:223]
-#        truth = truth.reshape(43264,)
-#        prediction = prediction.reshape(43264,)
 
-        scan = test_slice[0,:,:,2]
-        tmp_label = test_label[0]
-        tmp_pred = prediction.reshape(208, 208)
-        tmp_pred = np.pad(tmp_pred, (16,16), mode='edge')
+        if save_img:
+
+            scan = test_slice[0,:,:,2]
+            tmp_label = test_label[0]
+            tmp_pred = prediction.reshape(208, 208)
+            tmp_pred = np.pad(tmp_pred, (16,16), mode='edge')
 
 
-        fig = plt.figure(figsize=(15, 10))
-        plt.subplot(131)
-        plt.title('Input')
-        plt.imshow(scan, cmap='gray')
-        plt.subplot(132)
-        plt.title('Ground Truth')
-        plt.imshow(tmp_label,cmap='gray')
-        plt.subplot(133)
-        plt.title('Prediction')
-        plt.imshow(tmp_pred,cmap='gray')
-        plt.savefig('outputs/{}_pat{}_slice{}.png'.format(model_name,patient_no,slice_no), bbox_inches='tight')
-        plt.close(fig)
+            fig = plt.figure(figsize=(15, 10))
+            plt.subplot(131)
+            plt.title('Input')
+            plt.imshow(scan, cmap='gray')
+            plt.subplot(132)
+            plt.title('Ground Truth')
+            plt.imshow(tmp_label,cmap='gray')
+            plt.subplot(133)
+            plt.title('Prediction')
+            plt.imshow(tmp_pred,cmap='gray')
+            plt.savefig('outputs/{}_pat{}_slice{}.png'.format(model_name,patient_no,slice_no), bbox_inches='tight')
+            plt.close(fig)
 
         gt.extend(truth)
         pred.extend(prediction)
@@ -109,6 +111,7 @@ if __name__ == '__main__':
     haus_core = hausdorff_core(pred, gt)
     '''
 
+    print("")
     print("=======================================")
     print("Dice whole tumor score: {:0.4f}".format(dice_whole)) 
     print("Dice enhancing tumor score: {:0.4f}".format(dice_en)) 
@@ -127,69 +130,7 @@ if __name__ == '__main__':
     print("Hausdorff enhancing tumor score: {:0.4f}".format(haus_en)) 
     print("Hausdorff core tumor score: {:0.4f}".format(haus_core)) 
     '''
-    print("=======================================\n\n")
-
-
-
-
-
-
-
-
-
-'''
-
-    for slice_no in range(patient_scans.shape[0]):
-        test_slice = patient_scans[slice_no:slice_no+1,:,:,:4]
-        test_label = patient_scans[slice_no:slice_no+1,:,:,4]
-    scan = test_slice[0,:,:,2]
-    tmp_label = test_label[0]
-
-
-
-
-# added batch_size of 256 (was none before)
-    prediction = model.predict(test_slice, batch_size=256, verbose=1)
-    prediction = np.around(prediction)
-    print(prediction.shape)
-    prediction = np.argmax(prediction, axis=-1)
-    print(prediction.shape)
-    pred = prediction[0]
-    print(pred.shape)
-    print(pred)
-    tmp_pred = pred.reshape(208, 208)
-    tmp_pred = np.pad(tmp_pred, (16, 16), mode='edge')
-
-
-    plt.figure(figsize=(15, 10))
-    plt.subplot(131)
-    plt.title('Input')
-    plt.imshow(scan, cmap='gray')
-    plt.subplot(132)
-    plt.title('Ground Truth')
-    plt.imshow(tmp_label,cmap='gray')
-    plt.subplot(133)
-    plt.title('Prediction')
-    plt.imshow(tmp_pred,cmap='gray')
-    plt.savefig('outputs/{}_pat{}_slice{}.png'.format(model_name,patient_no,slice_no), bbox_inches='tight')
-#plt.show()
-
-
-
-
-    y = test_label[0,15:223,15:223]
-
-    truth = y.reshape(43264,)
-    guess = pred.reshape(43264,)
-    print('slice no {}'.format(slice_no))
-
-    print(classification_report(truth, guess, labels=[0,1,2,3,4]))
-    '''
-
-
-
-
-
+    print("=======================================\n")
 
 
 

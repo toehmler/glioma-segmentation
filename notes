@@ -22,3 +22,7 @@ pip3 install matplotlib imageio scikit-image
 
 * allow udp firewall 60000-61000 *
 sudo apt install mosh
+
+todo:
+- tensorboard
+
