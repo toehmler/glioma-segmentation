@@ -119,7 +119,7 @@ if __name__ == '__main__':
     for i in range(labels.shape[0]):
         y[i,:,:,labels[i]] = 1
 
-    checkpointer = ModelCheckpoint('outputs/models/'+model_name+'.{epoch:02d}-{val_loss:.2f}.h5'.format(model_name), verbose = 1)
+    checkpointer = ModelCheckpoint('outputs/models/.{epoch:02d}-{val_loss:.2f}.h5'.format(model_name), verbose = 1)
     model.fit(patches, y,
             epochs = eps,
             batch_size = bs,
