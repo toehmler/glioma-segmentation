@@ -14,38 +14,38 @@ def tri_path(input_shape):
     X_input = Input(input_shape)
 
     local = Conv2D(64, (4,4),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
 
     local = Conv2D(64, (4,4),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
     local = Conv2D(64, (4,4),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
     local = Conv2D(64, (4,4),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
     local = Conv2D(64, (3,3),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
     local = Conv2D(64, (3,3),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
@@ -54,25 +54,25 @@ def tri_path(input_shape):
 
 
     inter = Conv2D(80, (7,7),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.5)(inter)
 
     inter = Conv2D(80, (7,7),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(inter)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.5)(inter)
 
     inter = Conv2D(80, (5,5),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(inter)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.5)(inter)
 
     uni = Conv2D(160, (17,17),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     uni = BatchNormalization()(uni)
     uni = Dropout(0.25)(uni)
@@ -140,23 +140,13 @@ if __name__ == "__main__":
 
 
 
-    '''
     name = input('Model name: ')
-    test_model = tri_path((240, 240, 4))
-    print(test_model.summary())
-    test_model_json = test_model.to_json()
-    '''
-    json_file = open('outputs/models/tri_path_test.json', 'r')
-    loaded_model_json = json_file.read()
-    json_file.close()
-    model = model_from_json(loaded_model_json)
-    print(model.summary())
 
 #    with open("outputs/models/albert_test.json", "w") as json_file:
 #        json_file.write(test_model_json)
 
-    #train_model = tri_path((37,37,4))
-    #train_model.save('outputs/models/{}_train.h5'.format(name))
+    train_model = tri_path((37,37,4))
+    train_model.save('outputs/models/{}_train.h5'.format(name))
 
 
 
