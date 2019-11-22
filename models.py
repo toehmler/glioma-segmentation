@@ -59,8 +59,7 @@ def tri_path(input_shape):
     model = Model(inputs=X_input, outputs=out)
 
     #model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=[f1_score])
-    sgd = SGD(lr=0.08, momentum=0.9, decay=5e-6, nesterov=False)
-    model.compile(loss=gen_dice_loss, 
+    model.compile(loss='categorical_crossentropy', 
                   optimizer='adam', metrics=[dice_whole_metric,
                                           dice_core_metric,
                                           dice_en_metric])
