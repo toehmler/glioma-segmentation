@@ -12,10 +12,12 @@ import json
 from glob import glob
 import sys
 from metrics import *
+import os 
 
 #load json and create model
 
 if __name__ == '__main__':
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     if len(sys.argv) == 4:
         model_name = sys.argv[1]
         patient_no = int(sys.argv[2])
