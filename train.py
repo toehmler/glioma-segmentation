@@ -75,8 +75,8 @@ if __name__ == '__main__':
         model_name = input('Model name: ')
         start_pat = input('Start patient: ')
         end_pat = input('End patient: ')
-        bs = int(input('Epochs: '))
-        eps = int(input('Batch size: '))
+        eps = int(input('Epochs: '))
+        bs = int(input('Batch size: '))
         vs = float(input('Validation split: '))
 
 
