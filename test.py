@@ -12,14 +12,13 @@ import json
 from glob import glob
 import sys
 from metrics import *
-import os 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 
 #load json and create model
 
 if __name__ == '__main__':
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-    tf.logging.set_verbosity(tf.logging.ERROR)
     if len(sys.argv) == 4:
         model_name = sys.argv[1]
         patient_no = int(sys.argv[2])
