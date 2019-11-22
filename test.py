@@ -23,7 +23,7 @@ if __name__ == '__main__':
     else:
         model_name = input('Model name: ')
         patient_no = int(input('Patient no: '))
-        img_flag = input('Save images: ')
+        img_flag = input('Save images (y/n): ')
 #        slice_no = int(input('Slice no: '))
 
     json_file = open('outputs/models/tri_path_test.json', 'r')

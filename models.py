@@ -17,11 +17,14 @@ def tri_path(input_shape):
             strides=(1,1), padding='valid', activation='relu')(X_input)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
+
+
     local = Conv2D(64, (4,4),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
+
     local = Conv2D(64, (4,4),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
@@ -34,19 +37,40 @@ def tri_path(input_shape):
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
-    inter = Conv2D(64, (7,7),
+    local = Conv2D(64, (3,3),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization()(local)
+    local = Dropout(0.5)(local)
+
+    local = Conv2D(64, (3,3),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization()(local)
+    local = Dropout(0.5)(local)
+
+
+
+
+    inter = Conv2D(80, (7,7),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.5)(inter)
 
-    inter = Conv2D(64, (7,7),
+    inter = Conv2D(80, (7,7),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(inter)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.5)(inter)
 
-    uni = Conv2D(160, (13,13),
+    inter = Conv2D(80, (5,5),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(inter)
+    inter = BatchNormalization()(inter)
+    inter = Dropout(0.5)(inter)
+
+    uni = Conv2D(160, (17,17),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     uni = BatchNormalization()(uni)
@@ -116,9 +140,8 @@ if __name__ == "__main__":
 
 
     name = input('Model name: ')
-    train_model = tri_path((33,33,4))
-    print(train_model.summary())
-    #train_model.save('outputs/models/{}_train.h5'.format(name))
+    train_model = tri_path((37,37,4))
+    train_model.save('outputs/models/{}_train.h5'.format(name))
 
 
 
