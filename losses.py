@@ -17,8 +17,8 @@ def dice(y_true, y_pred):
 def dice_whole_metric(y_true, y_pred):
     #computes the dice for the whole tumor
 
-    y_true_f = K.reshape(y_true,shape=(-1,4))
-    y_pred_f = K.reshape(y_pred,shape=(-1,4))
+    y_true_f = K.reshape(y_true,shape=(-1,5))
+    y_pred_f = K.reshape(y_pred,shape=(-1,5))
     y_whole=K.sum(y_true_f[:,1:],axis=1)
     p_whole=K.sum(y_pred_f[:,1:],axis=1)
     dice_whole=dice(y_whole,p_whole)
@@ -27,8 +27,8 @@ def dice_whole_metric(y_true, y_pred):
 def dice_en_metric(y_true, y_pred):
     #computes the dice for the enhancing region
 
-    y_true_f = K.reshape(y_true,shape=(-1,4))
-    y_pred_f = K.reshape(y_pred,shape=(-1,4))
+    y_true_f = K.reshape(y_true,shape=(-1,5))
+    y_pred_f = K.reshape(y_pred,shape=(-1,5))
     y_enh=y_true_f[:,-1]
     p_enh=y_pred_f[:,-1]
     dice_en=dice(y_enh,p_enh)
@@ -37,8 +37,8 @@ def dice_en_metric(y_true, y_pred):
 def dice_core_metric(y_true, y_pred):
     ##computes the dice for the core region
 
-    y_true_f = K.reshape(y_true,shape=(-1,4))
-    y_pred_f = K.reshape(y_pred,shape=(-1,4))
+    y_true_f = K.reshape(y_true,shape=(-1,5))
+    y_pred_f = K.reshape(y_pred,shape=(-1,5))
     
     #workaround for tf
     y_core=K.sum(tf.gather(y_true_f, [1,3],axis =1),axis=1)
