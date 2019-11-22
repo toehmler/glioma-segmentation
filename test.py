@@ -68,8 +68,8 @@ if __name__ == '__main__':
 
             scan = test_slice[0,:,:,2]
             tmp_label = test_label[0]
-            tmp_pred = prediction.reshape(208, 208)
-            tmp_pred = np.pad(tmp_pred, (16,16), mode='edge')
+            tmp_pred = prediction.reshape(204, 204)
+            tmp_pred = np.pad(tmp_pred, (18,18), mode='edge')
 
 
             fig = plt.figure(figsize=(15, 10))
