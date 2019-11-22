@@ -125,9 +125,8 @@ if __name__ == '__main__':
             batch_size = bs,
             validation_split = vs,
             verbose = 1,
-            callbacks = [checkpointer, 
-                         SGDLearningRateTracker()])
-
+            callbacks = [checkpointer])
+                         
     model.fit(patches, y, epochs = eps, batch_size = bs, validation_split = vs)
     model.save('outputs/models/{}_train.h5'.format(model_name))
     weights = '/outputs/models/{}.hdf5'.format(model_name)
