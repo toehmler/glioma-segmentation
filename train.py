@@ -100,17 +100,8 @@ if __name__ == '__main__':
 #    save_path = 'outputs/models/{}'.format(model_name)
 #    save_path += '_weights.{epoch:02}--{val_loss:.2f}.h5'
 #    checkpointer = ModelCheckpoint(save_path, verbose = 1)
-    model.fit(patches, y,
-            epochs = eps,
-            batch_size = bs,
-            validation_split = vs,
-            verbose = 1)
-                         
     model.fit(patches, y, epochs = eps, batch_size = bs, validation_split = vs)
     model.save('outputs/models/{}_train.h5'.format(model_name))
-    weights = '/outputs/models/{}.hdf5'.format(model_name)
-    self.model.save_weights(weights)
-    print('Model weights saved')
 
 
 
