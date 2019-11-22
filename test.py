@@ -13,6 +13,7 @@ from glob import glob
 import sys
 from metrics import *
 import os 
+import tensorflow as tf
 
 #load json and create model
 
