@@ -12,9 +12,6 @@ import json
 from glob import glob
 import sys
 from metrics import *
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-import tensorflow as tf
 
 #load json and create model
 
