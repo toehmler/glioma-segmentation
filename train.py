@@ -70,16 +70,16 @@ if __name__ == '__main__':
         model_name = sys.argv[1]
         start_pat = sys.argv[2]
         end_pat = sys.argv[3]
-        bs = sys.argv[4]
-        eps = sys.argv[5]
-        vs = sys.argv[6]
+        bs = int(sys.argv[4])
+        eps = int(sys.argv[5])
+        vs = float(sys.argv[6])
     else:
         model_name = input('Model name: ')
         start_pat = input('Start patient: ')
         end_pat = input('End patient: ')
-        bs = input('Epochs: ')
-        eps = input('Batch size: ')
-        vs = input('Validation split: ')
+        bs = int(input('Epochs: '))
+        eps = int(input('Batch size: '))
+        vs = float(input('Validation split: '))
 
 
     '''
