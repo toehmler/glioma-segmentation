@@ -117,7 +117,8 @@ if __name__ == "__main__":
 
     name = input('Model name: ')
     train_model = tri_path((33,33,4))
-    train_model.save('outputs/models/{}_train.h5'.format(name))
+    print(train_model.summary())
+    #train_model.save('outputs/models/{}_train.h5'.format(name))
 
 
 

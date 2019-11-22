@@ -16,14 +16,14 @@ from metrics import *
 #load json and create model
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 4:
         model_name = sys.argv[1]
         patient_no = int(sys.argv[2])
-        img_flag = sys.argv[4]
+        img_flag = sys.argv[3]
     else:
         model_name = input('Model name: ')
         patient_no = int(input('Patient no: '))
-        img_flag = sys.argv[4]
+        img_flag = input('Slice no: ')
 #        slice_no = int(input('Slice no: '))
 
     json_file = open('outputs/models/tri_path_test.json', 'r')
