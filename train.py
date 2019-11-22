@@ -80,13 +80,8 @@ if __name__ == '__main__':
         vs = float(input('Validation split: '))
 
 
-    '''
     model = load_model('outputs/models/{}_train.h5'.format(model_name), 
             custom_objects={'f1_score': f1_score})
-    '''
-
-    model = load_model('outputs/models/{}_train.h5'.format(model_name), 
-            custom_objects={'f1': f1_score})
 
     with open('config.json') as config_file:
         config = json.load(config_file)
