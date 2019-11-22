@@ -49,18 +49,6 @@ def f1_score(y_true, y_pred):
     f1_score = 2 * (precision * recall) / (precision + recall)
     return f1_score
 
-class SGDLearningRateTracker(Callback):
-    def on_epoch_begin(self, epoch, logs={}):
-        optimizer = self.model.optimizer
-        lr = K.get_value(optimizer.lr)
-        decay = K.get_value(optimizer.decay)
-        lr=lr/10
-        decay=decay*10
-        K.set_value(optimizer.lr, lr)
-        K.set_value(optimizer.decay, decay)
-        print('LR changed to:',lr)
-        print('Decay changed to:',decay)
-
 if __name__ == '__main__':
     if len(sys.argv) == 3 and sys.argv[2] == 'help':
         print('python3 train.py [model_name] [start_patient] [end_patient] [batch_size] [epochs] [validation_split]')
