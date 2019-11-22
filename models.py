@@ -1,4 +1,5 @@
 from keras import layers
+from keras.models import model_from_json
 from keras.layers import Input, Dense, Activation, ZeroPadding2D, BatchNormalization, Flatten, Conv2D, Lambda,Concatenate
 from keras.layers import AveragePooling2D, MaxPooling2D, Dropout, GlobalMaxPooling2D, GlobalAveragePooling2D, Add
 from keras.layers import Maximum
@@ -139,9 +140,23 @@ if __name__ == "__main__":
 
 
 
+    '''
     name = input('Model name: ')
-    train_model = tri_path((37,37,4))
-    train_model.save('outputs/models/{}_train.h5'.format(name))
+    test_model = tri_path((240, 240, 4))
+    print(test_model.summary())
+    test_model_json = test_model.to_json()
+    '''
+    json_file = open('outputs/models/tri_path_test.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    model = model_from_json(loaded_model_json)
+    print(model.summary())
+
+#    with open("outputs/models/albert_test.json", "w") as json_file:
+#        json_file.write(test_model_json)
+
+    #train_model = tri_path((37,37,4))
+    #train_model.save('outputs/models/{}_train.h5'.format(name))
 
 
 

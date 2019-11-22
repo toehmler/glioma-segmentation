@@ -61,7 +61,8 @@ if __name__ == '__main__':
         prediction = prediction[0]
         prediction = np.around(prediction)
         prediction = np.argmax(prediction, axis=-1)
-        truth = test_label[0,15:223,15:223]
+#        truth = test_label[0,15:223,15:223]
+        truth = test_label[0,17:221,17:221]
 
         if save_img:
 
