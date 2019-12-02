@@ -99,6 +99,7 @@ if __name__ == '__main__':
 
 #    save_path = 'outputs/models/{}'.format(model_name)
 #    save_path += '_weights.{epoch:02}--{val_loss:.2f}.h5'
+    model.fit(x, y, epochs = eps, batch_size = bs, validation_split = 0.2)
     model.save('outputs/models/{}_train.h5'.format(model_name))
 
 
