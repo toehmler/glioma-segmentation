@@ -222,14 +222,16 @@ if __name__ == "__main__":
 
     name = input('Model name: ')
 
+    '''
     test_model = tri_path_v2((272,272,4))
     test_model_json = test_model.to_json()
 
     with open("outputs/models/tri_path_v2_test.json", "w") as json_file:
         json_file.write(test_model_json)
+    '''
 
-#    train_model = tri_path_v2((65,65,4))
-#    train_model.save('outputs/models/{}_train.h5'.format(name))
+    train_model = tri_path_v2((65,65,4))
+    train_model.save('outputs/models/{}_train.h5'.format(name))
 
 
 
