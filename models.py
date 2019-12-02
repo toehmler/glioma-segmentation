@@ -10,6 +10,86 @@ import keras.backend as K
 from keras.regularizers import l1_l2
 from losses import *
 
+def tri_path_v2(input_shape):
+    X_input = Input(input_shape)
+
+    # LOCAL 6 x 3 x 3 filters 
+    # INTER 4 x 4 x 4 filters
+    # GLOBAL 2 x 7 x7 filters
+    local = Conv2D(64, (4,4),
+            strides=(1,1), padding='valid', activation='relu')(X_input)
+    local = BatchNormalization()(local)
+    local = Dropout(0.2)(local)
+
+    local = Conv2D(32, (4,4),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization()(local)
+    local = Dropout(0.2)(local)
+
+    local = Conv2D(32, (4,4),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization()(local)
+    local = Dropout(0.2)(local)
+
+    local = Conv2D(32, (4,4),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization()(local)
+    local = Dropout(0.2)(local)
+
+    local = Conv2D(32, (4,4),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization()(local)
+    local = Dropout(0.2)(local)
+
+    local = Conv2D(32, (4,4),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization()(local)
+    local = Dropout(0.2)(local)
+
+    inter = Conv2D(64, (7,7),
+            strides=(1,1), padding='valid', activation='relu')(X_input)
+    inter = BatchNormalization()(inter)
+    inter = Dropout(0.2)(inter)
+
+    inter = Conv2D(64, (7,7),
+            strides=(1,1), padding='valid', activation='relu')(inter)
+    inter = BatchNormalization()(inter)
+    inter = Dropout(0.2)(inter)
+
+    inter = Conv2D(64, (7,7),
+            strides=(1,1), padding='valid', activation='relu')(inter)
+    inter = BatchNormalization()(inter)
+    inter = Dropout(0.2)(inter)
+
+    uni = Conv2D(32, (13, 13),
+            strides=(1,1), padding='valid', activation='relu')(X_input)
+    uni = BatchNormalization()(uni)
+    uni = Dropout(0.2)(uni)
+
+    uni = Conv2D(64, (7, 7),
+            strides=(1,1), padding='valid', activation='relu')(uni)
+    uni = BatchNormalization()(uni)
+    uni = Dropout(0.2)(uni)
+
+    out = Concatenate()([local, inter, uni])
+    out = Conv2D(5,(47,47),strides=(1,1),padding='valid')(out)
+    out = Activation('softmax')(out)
+
+    model = Model(inputs=X_input, outputs=out)
+
+    model.compile(optimizer='adam',loss='categorical_crossentropy')
+
+    return model
+
+
+
+
+
+
+    
+
+
+
 def tri_path(input_shape):
     X_input = Input(input_shape)
 
@@ -78,12 +158,12 @@ def tri_path(input_shape):
     uni = Dropout(0.25)(uni)
 
     out = Concatenate()([local, inter, uni])
-    out = Conv2D(5,(21,21),strides=(1,1),padding='valid')(out)
+    out = Conv2D(5,(47,47),strides=(1,1),padding='valid')(out)
     out = Activation('softmax')(out)
 
     model = Model(inputs=X_input, outputs=out)
 
-    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=[f1_score])
+    model.compile(optimizer='adam',loss='categorical_crossentropy')
 
     return model
 
@@ -142,11 +222,14 @@ if __name__ == "__main__":
 
     name = input('Model name: ')
 
-#    with open("outputs/models/albert_test.json", "w") as json_file:
-#        json_file.write(test_model_json)
+    test_model = tri_path_v2((272,272,4))
+    test_model_json = test_model.to_json()
 
-    train_model = tri_path((37,37,4))
-    train_model.save('outputs/models/{}_train.h5'.format(name))
+    with open("outputs/models/tri_path_v2_test.json", "w") as json_file:
+        json_file.write(test_model_json)
+
+#    train_model = tri_path_v2((65,65,4))
+#    train_model.save('outputs/models/{}_train.h5'.format(name))
 
 
 
