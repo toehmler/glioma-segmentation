@@ -10,6 +10,37 @@ import keras.backend as K
 from keras.regularizers import l1_l2
 from losses import *
 
+
+def dice_coef(y_true, y_pred, smooth=1.0):
+    ''' Dice Coefficient
+    Args:
+        y_true (np.array): Ground Truth Heatmap (Label)
+        y_pred (np.array): Prediction Heatmap
+    '''
+
+    class_num = 2
+    for i in range(class_num):
+        y_true_f = K.flatten(y_true[:,:,:,i])
+        y_pred_f = K.flatten(y_pred[:,:,:,i])
+        intersection = K.sum(y_true_f * y_pred_f)
+        loss = ((2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth))
+        if i == 0:
+            total_loss = loss
+        else:
+            total_loss = total_loss + loss
+    total_loss = total_loss / class_num
+    return total_loss
+
+
+def dice_coef_loss(y_true, y_pred):
+    ''' Dice Coefficient Loss
+    Args:
+        y_true (np.array): Ground Truth Heatmap (Label)
+        y_pred (np.array): Prediction Heatmap
+    '''
+    return 1-dice_coef(y_true, y_pred)
+
+
 def tri_path_v2(input_shape):
     X_input = Input(input_shape)
 
@@ -21,27 +52,27 @@ def tri_path_v2(input_shape):
     local = BatchNormalization()(local)
     local = Dropout(0.2)(local)
 
-    local = Conv2D(32, (4,4),
+    local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.2)(local)
 
-    local = Conv2D(32, (4,4),
+    local = Conv2D(64, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.2)(local)
 
-    local = Conv2D(32, (4,4),
+    local = Conv2D(128, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.2)(local)
 
-    local = Conv2D(32, (4,4),
+    local = Conv2D(128, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.2)(local)
 
-    local = Conv2D(32, (4,4),
+    local = Conv2D(128, (4,4),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.2)(local)
@@ -56,29 +87,28 @@ def tri_path_v2(input_shape):
     inter = BatchNormalization()(inter)
     inter = Dropout(0.2)(inter)
 
-    inter = Conv2D(64, (7,7),
+    inter = Conv2D(128, (7,7),
             strides=(1,1), padding='valid', activation='relu')(inter)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.2)(inter)
 
-    uni = Conv2D(32, (13, 13),
+    uni = Conv2D(64, (13, 13),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     uni = BatchNormalization()(uni)
     uni = Dropout(0.2)(uni)
 
-    uni = Conv2D(64, (7, 7),
+    uni = Conv2D(128, (7, 7),
             strides=(1,1), padding='valid', activation='relu')(uni)
     uni = BatchNormalization()(uni)
     uni = Dropout(0.2)(uni)
 
     out = Concatenate()([local, inter, uni])
-    out = Conv2D(5,(47,47),strides=(1,1),padding='valid')(out)
+    out = Conv2D(64,(3,3),strides=(1,1),padding='valid')(out)
     out = Activation('softmax')(out)
 
     model = Model(inputs=X_input, outputs=out)
 
-    model.compile(optimizer='adam',loss='categorical_crossentropy')
-
+    model.compile(optimizer='adam', loss=dice_coef_loss, metrics=[dice_coef])
     return model
 
 
@@ -94,38 +124,32 @@ def tri_path(input_shape):
     X_input = Input(input_shape)
 
     local = Conv2D(64, (4,4),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
 
     local = Conv2D(64, (4,4),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
     local = Conv2D(64, (4,4),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
     local = Conv2D(64, (4,4),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
     local = Conv2D(64, (3,3),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
 
     local = Conv2D(64, (3,3),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization()(local)
     local = Dropout(0.5)(local)
@@ -134,19 +158,16 @@ def tri_path(input_shape):
 
 
     inter = Conv2D(80, (7,7),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.5)(inter)
 
     inter = Conv2D(80, (7,7),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(inter)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.5)(inter)
 
     inter = Conv2D(80, (5,5),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(inter)
     inter = BatchNormalization()(inter)
     inter = Dropout(0.5)(inter)
@@ -231,8 +252,9 @@ if __name__ == "__main__":
     '''
 
     train_model = tri_path_v2((65,65,4))
-    train_model.save('outputs/models/{}_train.h5'.format(name))
+#    train_model.save('outputs/models/{}_train.h5'.format(name))
 
+    print(train_model.summary())
 
 
     
