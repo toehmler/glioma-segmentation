@@ -63,12 +63,12 @@ def generate_balanced(scans):
     for arg_label in arg_labels:
         if len(arg_label) == min_arg:
             for idx in arg_label:
-                bounds = find_bounds([idx[1], idx[2]], 65)
+                bounds = find_bounds([idx[1], idx[2]], 35)
                 patch = scans[idx[0], bounds[0]:bounds[1], bounds[2]:bounds[3],:4]
                 label = int(scans[idx[0], idx[1], idx[2], 4])
-                if patch.shape != (65, 65, 4):
+                if patch.shape != (35, 35, 4):
                     continue
-                if len(np.argwhere(patch == 0)) > (65 * 65):
+                if len(np.argwhere(patch == 0)) > (35 * 35):
                     continue
                 patches.append(patch)
                 labels.append(label)
@@ -76,12 +76,12 @@ def generate_balanced(scans):
             count = 0
             while count < min_arg:
                 sample = random.choice(arg_label)
-                bounds = find_bounds([sample[1], sample[2]], 65)
+                bounds = find_bounds([sample[1], sample[2]], 35)
                 patch = scans[sample[0], bounds[0]:bounds[1], bounds[2]:bounds[3], :4]
                 label = int(scans[sample[0], sample[1], sample[2], 4])
-                if patch.shape != (65, 65, 4):
+                if patch.shape != (35, 35, 4):
                     continue
-                if len(np.argwhere(patch == 0)) > (65 * 65):
+                if len(np.argwhere(patch == 0)) > (35 * 35):
                     continue
                 patches.append(patch)
                 labels.append(label)
