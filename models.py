@@ -44,23 +44,49 @@ def dice_coef_loss(y_true, y_pred):
 def tri_path(input_shape):
     X_input = Input(input_shape)
 
-    local = Conv2D(64, (4,4),
+    local = Conv2D(48, (4,4),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     local = BatchNormalization(momentum=0.75)(local)
     local = Dropout(0.5)(local)
-    local = Conv2D(64, (4,4),
-#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization(momentum=0.75)(local)
-    local = Dropout(0.5)(local)
-    local = Conv2D(64, (4,4),
+
+    local = Conv2D(48, (4,4),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization(momentum=0.75)(local)
     local = Dropout(0.5)(local)
 
-    local = Conv2D(64, (4,4),
+    local = Conv2D(48, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization(momentum=0.75)(local)
+    local = Dropout(0.5)(local)
+
+    local = Conv2D(48, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization(momentum=0.75)(local)
+    local = Dropout(0.5)(local)
+
+    local = Conv2D(48, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization(momentum=0.75)(local)
+    local = Dropout(0.5)(local)
+
+    local = Conv2D(48, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization(momentum=0.75)(local)
+    local = Dropout(0.5)(local)
+
+    local = Conv2D(48, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization(momentum=0.75)(local)
+    local = Dropout(0.5)(local)
+
+    local = Conv2D(48, (4,4),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
     local = BatchNormalization(momentum=0.75)(local)
@@ -78,14 +104,33 @@ def tri_path(input_shape):
     inter = BatchNormalization(momentum=0.75)(inter)
     inter = Dropout(0.5)(inter)
 
-    uni = Conv2D(160, (13,13),
+    inter = Conv2D(64, (7,7),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(inter)
+    inter = BatchNormalization(momentum=0.75)(inter)
+    inter = Dropout(0.5)(inter)
+
+    inter = Conv2D(64, (7,7),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(inter)
+    inter = BatchNormalization(momentum=0.75)(inter)
+    inter = Dropout(0.5)(inter)
+
+    uni = Conv2D(80, (13,13),
 #            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
     uni = BatchNormalization(momentum=0.75)(uni)
     uni = Dropout(0.25)(uni)
 
+    uni = Conv2D(80, (13,13),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(uni)
+    uni = BatchNormalization(momentum=0.75)(uni)
+    uni = Dropout(0.25)(uni)
+
+
     out = Concatenate()([local, inter, uni])
-    out = Conv2D(5,(21,21),strides=(1,1),padding='valid')(out)
+    out = Conv2D(5,(11,11),strides=(1,1),padding='valid')(out)
     out = Activation('softmax')(out)
 
     model = Model(inputs=X_input, outputs=out)
@@ -143,7 +188,8 @@ if __name__ == "__main__":
         return f1_score
 
     name = input('Model name: ')
-    train_model = tri_path((33,33,4))
+    train_model = tri_path((35,35,4))
+
     train_model.save('models/{}_train.h5'.format(name))
 
     test_model = tri_path((240,240,4))
