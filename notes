@@ -1,6 +1,5 @@
 sudo apt update
 sudo apt install python3-pip
-this is a test
 sudo apt install awscli
 aws configure
 aws s3 cp s3://midd-brats/brats_data brats_data --recursive

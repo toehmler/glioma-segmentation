@@ -9,6 +9,7 @@ from keras.optimizers import SGD
 import keras.backend as K
 from keras.regularizers import l1_l2
 from losses import *
+from sklearn.utils import class_weight
 
 
 def dice_coef(y_true, y_pred, smooth=1.0):
@@ -40,152 +41,55 @@ def dice_coef_loss(y_true, y_pred):
     '''
     return 1-dice_coef(y_true, y_pred)
 
-
-def tri_path_v2(input_shape):
-    X_input = Input(input_shape)
-
-    # LOCAL 6 x 3 x 3 filters 
-    # INTER 4 x 4 x 4 filters
-    # GLOBAL 2 x 7 x7 filters
-    local = Conv2D(64, (4,4),
-            strides=(1,1), padding='valid', activation='relu')(X_input)
-    local = BatchNormalization()(local)
-    local = Dropout(0.2)(local)
-
-    local = Conv2D(64, (4,4),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.2)(local)
-
-    local = Conv2D(64, (4,4),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.2)(local)
-
-    local = Conv2D(128, (4,4),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.2)(local)
-
-    local = Conv2D(128, (4,4),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.2)(local)
-
-    local = Conv2D(128, (4,4),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.2)(local)
-
-    inter = Conv2D(64, (7,7),
-            strides=(1,1), padding='valid', activation='relu')(X_input)
-    inter = BatchNormalization()(inter)
-    inter = Dropout(0.2)(inter)
-
-    inter = Conv2D(64, (7,7),
-            strides=(1,1), padding='valid', activation='relu')(inter)
-    inter = BatchNormalization()(inter)
-    inter = Dropout(0.2)(inter)
-
-    inter = Conv2D(128, (7,7),
-            strides=(1,1), padding='valid', activation='relu')(inter)
-    inter = BatchNormalization()(inter)
-    inter = Dropout(0.2)(inter)
-
-    uni = Conv2D(64, (13, 13),
-            strides=(1,1), padding='valid', activation='relu')(X_input)
-    uni = BatchNormalization()(uni)
-    uni = Dropout(0.2)(uni)
-
-    uni = Conv2D(128, (7, 7),
-            strides=(1,1), padding='valid', activation='relu')(uni)
-    uni = BatchNormalization()(uni)
-    uni = Dropout(0.2)(uni)
-
-    out = Concatenate()([local, inter, uni])
-    out = Conv2D(64,(3,3),strides=(1,1),padding='valid')(out)
-    out = Activation('softmax')(out)
-
-    model = Model(inputs=X_input, outputs=out)
-
-    model.compile(optimizer='adam', loss=dice_coef_loss, metrics=[dice_coef])
-    return model
-
-
-
-
-
-
-    
-
-
-
 def tri_path(input_shape):
     X_input = Input(input_shape)
 
     local = Conv2D(64, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    local = BatchNormalization()(local)
+    local = BatchNormalization(momentum=0.75)(local)
     local = Dropout(0.5)(local)
-
+    local = Conv2D(64, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization(momentum=0.75)(local)
+    local = Dropout(0.5)(local)
+    local = Conv2D(64, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+            strides=(1,1), padding='valid', activation='relu')(local)
+    local = BatchNormalization(momentum=0.75)(local)
+    local = Dropout(0.5)(local)
 
     local = Conv2D(64, (4,4),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
+    local = BatchNormalization(momentum=0.75)(local)
     local = Dropout(0.5)(local)
 
-    local = Conv2D(64, (4,4),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.5)(local)
-
-    local = Conv2D(64, (4,4),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.5)(local)
-
-    local = Conv2D(64, (3,3),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.5)(local)
-
-    local = Conv2D(64, (3,3),
-            strides=(1,1), padding='valid', activation='relu')(local)
-    local = BatchNormalization()(local)
-    local = Dropout(0.5)(local)
-
-
-
-
-    inter = Conv2D(80, (7,7),
+    inter = Conv2D(64, (7,7),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    inter = BatchNormalization()(inter)
+    inter = BatchNormalization(momentum=0.75)(inter)
     inter = Dropout(0.5)(inter)
 
-    inter = Conv2D(80, (7,7),
+    inter = Conv2D(64, (7,7),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(inter)
-    inter = BatchNormalization()(inter)
+    inter = BatchNormalization(momentum=0.75)(inter)
     inter = Dropout(0.5)(inter)
 
-    inter = Conv2D(80, (5,5),
-            strides=(1,1), padding='valid', activation='relu')(inter)
-    inter = BatchNormalization()(inter)
-    inter = Dropout(0.5)(inter)
-
-    uni = Conv2D(160, (17,17),
-            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
+    uni = Conv2D(160, (13,13),
+#            kernel_regularizer=l1_l2(l1 = 0.001, l2 = 0.001),
             strides=(1,1), padding='valid', activation='relu')(X_input)
-    uni = BatchNormalization()(uni)
+    uni = BatchNormalization(momentum=0.75)(uni)
     uni = Dropout(0.25)(uni)
 
     out = Concatenate()([local, inter, uni])
-    out = Conv2D(5,(47,47),strides=(1,1),padding='valid')(out)
+    out = Conv2D(5,(21,21),strides=(1,1),padding='valid')(out)
     out = Activation('softmax')(out)
 
     model = Model(inputs=X_input, outputs=out)
-
-    model.compile(optimizer='adam',loss='categorical_crossentropy')
-
+    model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=[dice_coef])
     return model
 
 def two_path(input_shape):
@@ -238,25 +142,14 @@ if __name__ == "__main__":
         f1_score = 2 * (precision * recall) / (precision + recall)
         return f1_score
 
-
-
-
     name = input('Model name: ')
+    train_model = tri_path((33,33,4))
+    train_model.save('models/{}_train.h5',format(name))
 
-    '''
-    test_model = tri_path_v2((272,272,4))
+    test_model = tri_path((240,240,4))
     test_model_json = test_model.to_json()
-
-    with open("outputs/models/tri_path_v2_test.json", "w") as json_file:
+    with open("models/tri_path_test_model.json", "w") as json_file:
         json_file.write(test_model_json)
-    '''
-
-    train_model = tri_path_v2((65,65,4))
-#    train_model.save('outputs/models/{}_train.h5'.format(name))
-
-    print(train_model.summary())
-
-
     
 
     

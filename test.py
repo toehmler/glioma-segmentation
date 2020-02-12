@@ -26,12 +26,13 @@ if __name__ == '__main__':
         img_flag = input('Save images (y/n): ')
 #        slice_no = int(input('Slice no: '))
 
-    json_file = open('outputs/models/albert_test.json', 'r')
+    json_file = open('outputs/models/tri_path_test.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     model = model_from_json(loaded_model_json)
 
     model.load_weights("outputs/models/{}_train.h5".format(model_name))
+    print(model.summary())
 
     with open('config.json') as config_file:
         config = json.load(config_file)
@@ -41,8 +42,8 @@ if __name__ == '__main__':
         config = json.load(config_file)
     root = config['root']
     patient_path = glob(root + '/*pat{}*'.format(patient_no))
-    patient_scans = utils.load_test_scans(patient_path[0])
-    patient_scans = utils.norm_test_scans(patient_scans)
+    patient_scans = utils.load_scans(patient_path[0])
+    patient_scans = utils.norm_scans(patient_scans)
 
     gt = []
     pred = []
