@@ -32,9 +32,8 @@ if __name__ == '__main__':
         vs = float(input('Validation split: '))
 
 
-    model = load_model('outputs/models/{}_train.h5'.format(model_name), 
-            custom_objects={'dice_coef': dice_coef,
-                            'f1_score': f1_score})
+    model = load_model('models/{}_train.h5'.format(model_name), 
+            custom_objects={'dice_coef': dice_coef})
 
     with open('config.json') as config_file:
         config = json.load(config_file)
@@ -63,7 +62,7 @@ if __name__ == '__main__':
         y[i,:,:,labels[i]] = 1
 
     model.fit(patches, y, epochs = eps, batch_size = bs, validation_split = vs)
-    model.save('outputs/models/{}_train.h5'.format(model_name))
+    model.save('models/{}_train.h5'.format(model_name))
 
 
 
