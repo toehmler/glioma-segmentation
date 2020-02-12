@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
     name = input('Model name: ')
     train_model = tri_path((33,33,4))
-    train_model.save('models/{}_train.h5',format(name))
+    train_model.save('models/{}_train.h5'.format(name))
 
     test_model = tri_path((240,240,4))
     test_model_json = test_model.to_json()
